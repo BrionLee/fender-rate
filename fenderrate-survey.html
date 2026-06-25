@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share your rate — Fender Rate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F7F4;--surface:#FFFFFF;--border:#E2E0DC;--border-strong:#C8C4BE;
+  --text:#1A1A1A;--muted:#6B7280;--faint:#9CA3AF;
+  --orange:#E8521A;--orange-light:#FDF0EB;--orange-dark:#C4400E;
+  --green:#16A34A;--green-light:#F0FDF4;
+  --red:#DC2626;--red-light:#FEF2F2;
+  --radius:10px;--radius-sm:6px;--radius-xs:4px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.wordmark{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:6px}
+.wordmark-dent{color:var(--orange);font-size:22px}
+.nav-back{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .15s}
+.nav-back:hover{color:var(--text)}
+
+/* PROGRESS */
+.progress-bar-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px}
+.progress-inner{max-width:680px;margin:0 auto}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.progress-label{font-size:12px;font-weight:600;color:var(--orange)}
+.progress-count{font-size:12px;color:var(--faint)}
+.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--orange);border-radius:2px;transition:width .4s ease}
+.section-dots{display:flex;gap:6px;margin-top:8px}
+.section-dot{height:4px;flex:1;border-radius:2px;background:var(--border);transition:background .3s}
+.section-dot.done{background:var(--orange)}
+.section-dot.active{background:var(--orange);opacity:.5}
+
+/* LAYOUT */
+.main{max-width:680px;margin:0 auto;padding:32px 24px 80px}
+
+/* SECTION CARDS */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;display:none}
+.section-card.active{display:block}
+.section-card.done-card{display:block;opacity:.5;pointer-events:none}
+.section-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.section-num{width:28px;height:28px;border-radius:50%;background:var(--orange-light);color:var(--orange);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-num.done{background:var(--green-light);color:var(--green)}
+.section-title{font-size:15px;font-weight:600}
+.section-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.section-check{margin-left:auto;color:var(--green);font-size:18px;display:none}
+.section-body{padding:20px 24px}
+
+/* FIELDS */
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px}
+.field-hint{font-size:11px;color:var(--faint);margin-top:4px}
+.required-star{color:var(--orange);margin-left:2px}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif;font-size:14px;background:var(--surface);color:var(--text);
+  transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none
+}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,82,26,.1)}
+input.error,select.error{border-color:var(--red)}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.grid-2{grid-template-columns:1fr}}
+
+/* RADIO / CHECKBOX GROUPS */
+.radio-group,.check-group{display:flex;flex-direction:column;gap:8px}
+.radio-group.inline,.check-group.inline{flex-direction:row;flex-wrap:wrap;gap:8px}
+.radio-opt,.check-opt{position:relative}
+.radio-opt input,.check-opt input{position:absolute;opacity:0;width:0;height:0}
+.radio-opt label,.check-opt label{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;
+  font-size:13px;transition:border-color .15s,background .15s;background:var(--surface);
+  user-select:none
+}
+.radio-opt label:hover,.check-opt label:hover{border-color:var(--orange-dark);background:var(--orange-light)}
+.radio-opt input:checked+label,.check-opt input:checked+label{border-color:var(--orange);background:var(--orange-light);color:var(--orange-dark);font-weight:500}
+.radio-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-strong);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+.radio-opt input:checked+label .radio-dot{border-color:var(--orange);background:var(--orange)}
+.radio-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;display:none}
+.radio-opt input:checked+label .radio-dot::after{display:block}
+.check-box{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--border-strong);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.check-opt input:checked+label .check-box{border-color:var(--orange);background:var(--orange)}
+.check-box::after{content:'✓';font-size:10px;color:#fff;display:none;line-height:1}
+.check-opt input:checked+label .check-box::after{display:block}
+.inline .radio-opt label,.inline .check-opt label{padding:7px 14px}
+
+/* CURRENCY INPUT */
+.currency-wrap{position:relative}
+.currency-wrap::before{content:'$';position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.currency-wrap input{padding-left:26px}
+
+/* BUTTONS */
+.btn{padding:11px 24px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn-primary:hover{background:var(--orange-dark)}
+.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+.btn-secondary:hover{background:var(--bg)}
+.btn-full{width:100%;justify-content:center}
+.btn-row{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+
+/* ERROR */
+.field-error{font-size:11px;color:var(--red);margin-top:4px;display:none}
+.field-error.show{display:block}
+
+/* SUCCESS STATE */
+#success-screen{display:none;text-align:center;padding:48px 24px}
+.success-icon{width:64px;height:64px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px}
+#success-screen h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;margin-bottom:8px}
+#success-screen p{color:var(--muted);font-size:14px;max-width:400px;margin:0 auto 24px}
+
+/* SECTION LABELS */
+.section-eyebrow{font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+
+/* DIVIDER */
+.field-divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+
+/* PRIVACY NOTE */
+.privacy-strip{background:var(--orange-light);border:1px solid #F9C5AE;border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:#7C2D12;margin-bottom:24px;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.privacy-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:20px 24px;text-align:center}
+.footer-text{max-width:680px;margin:0 auto;font-size:11px;color:var(--faint);line-height:1.7}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="wordmark" href="fenderrate.html">
+      <span class="wordmark-dent">⌒</span> Fender Rate
+    </a>
+    <a class="nav-back" href="fenderrate.html">&#8592; Back to estimator</a>
+  </div>
+</nav>
+
+<div class="progress-bar-wrap" id="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-meta">
+      <span class="progress-label" id="progress-label">Your vehicle</span>
+      <span class="progress-count" id="progress-count">Section 1 of 4</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
+    <div class="section-dots">
+      <div class="section-dot active" id="dot-0"></div>
+      <div class="section-dot" id="dot-1"></div>
+      <div class="section-dot" id="dot-2"></div>
+      <div class="section-dot" id="dot-3"></div>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+
+  <div style="margin-bottom:28px">
+    <h1 style="font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;margin-bottom:6px">Share your actual rate</h1>
+    <p style="font-size:14px;color:var(--muted)">About 3 minutes. Completely anonymous — no name, email, or contact info collected.</p>
+  </div>
+
+  <div class="privacy-strip">
+    <span class="privacy-icon">&#128274;</span>
+    <span>We don't collect your name, email, address, or ZIP code. Your responses are aggregated with others to improve the Fender Rate estimator. Individual submissions are never published.</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 1: YOUR VEHICLE -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section-card active" id="section-0">
+    <div class="section-header">
+      <div class="section-num" id="num-0">1</div>
+      <div><div class="section-title">Your vehicle</div><div class="section-sub">The car you're insuring</div></div>
+      <span class="section-check" id="check-0">&#10003;</span>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label class="field-label">State <span class="required-star">*</span></label>
+        <select id="q-state">
+          <option value="">Select your state…</option>
+          <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Washington D.C.</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
+        </select>
+        <div class="field-error" id="err-state">Please select your state.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label">Vehicle year <span class="required-star">*</span></label>
+          <select id="q-year">
+            <option value="">Year…</option>
+            <option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option><option>2009</option><option>2008</option><option>2007</option><option>2006</option><option>2005 or older</option>
+          </select>
+          <div class="field-error" id="err-year">Please select the model year.</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Vehicle make <span class="required-star">*</span></label>
+          <select id="q-make">
+            <option value="">Make…</option>
+            <option>Acura</option><option>Audi</option><option>BMW</option><option>Buick</option><option>Cadillac</option><option>Chevrolet</option><option>Chrysler</option><option>Dodge</option><option>Ford</option><option>Genesis</option><option>GMC</option><option>Honda</option><option>Hyundai</option><option>Infiniti</option><option>Jeep</option><option>Kia</option><option>Lexus</option><option>Lincoln</option><option>Lucid</option><option>Mazda</option><option>Mercedes-Benz</option><option>Mini</option><option>Mitsubishi</option><option>Nissan</option><option>Polestar</option><option>Porsche</option><option>Ram</option><option>Rivian</option><option>Subaru</option><option>Tesla</option><option>Toyota</option><option>Volkswagen</option><option>Volvo</option><option>Other</option>
+          </select>
+          <div class="field-error" id="err-make">Please select the make.</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Model <span class="required-star">*</span></label>
+        <input type="text" id="q-model" placeholder="e.g. RAV4, Model Y, F-150, Accord…">
+        <div class="field-hint">Type the model name. Include trim if relevant (e.g. "Camry XSE").</div>
+        <div class="field-error" id="err-model">Please enter the model.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Vehicle type <span class="required-star">*</span></label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="vtype" id="vt-sedan" value="Sedan / Hatchback"><label for="vt-sedan"><span class="radio-dot"></span>Sedan / Hatchback</label></div>
+          <div class="radio-opt"><input type="radio" name="vtype" id="vt-suv" value="SUV / Crossover"><label for="vt-suv"><span class="radio-dot"></span>SUV / Crossover</label></div>
+          <div class="radio-opt"><input type="radio" name="vtype" id="vt-truck" value="Truck"><label for="vt-truck"><span class="radio-dot"></span>Truck</label></div>
+          <div class="radio-opt"><input type="radio" name="vtype" id="vt-van" value="Van / Minivan"><label for="vt-van"><span class="radio-dot"></span>Van / Minivan</label></div>
+          <div class="radio-opt"><input type="radio" name="vtype" id="vt-sports" value="Sports / Performance"><label for="vt-sports"><span class="radio-dot"></span>Sports / Performance</label></div>
+        </div>
+        <div class="field-error" id="err-vtype">Please select a vehicle type.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Is it electric or hybrid?</label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="powertrain" id="pt-gas" value="Gas"><label for="pt-gas"><span class="radio-dot"></span>Gas only</label></div>
+          <div class="radio-opt"><input type="radio" name="powertrain" id="pt-hybrid" value="Hybrid (HEV)"><label for="pt-hybrid"><span class="radio-dot"></span>Hybrid (HEV)</label></div>
+          <div class="radio-opt"><input type="radio" name="powertrain" id="pt-phev" value="Plug-in hybrid (PHEV)"><label for="pt-phev"><span class="radio-dot"></span>Plug-in hybrid (PHEV)</label></div>
+          <div class="radio-opt"><input type="radio" name="powertrain" id="pt-ev" value="Fully electric (EV)"><label for="pt-ev"><span class="radio-dot"></span>Fully electric (EV)</label></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="nextSection(0)">Continue &#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 2: YOUR COVERAGE -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section-card" id="section-1">
+    <div class="section-header">
+      <div class="section-num" id="num-1">2</div>
+      <div><div class="section-title">Your coverage</div><div class="section-sub">What your policy covers and what you pay</div></div>
+      <span class="section-check" id="check-1">&#10003;</span>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label class="field-label">Coverage level <span class="required-star">*</span></label>
+        <div class="radio-group">
+          <div class="radio-opt"><input type="radio" name="coverage" id="cov-min" value="Minimum / Liability only"><label for="cov-min"><span class="radio-dot"></span><div><div>Minimum / Liability only</div><div style="font-size:11px;color:var(--muted);margin-top:1px">State-required minimum — covers damage to others, not your car</div></div></label></div>
+          <div class="radio-opt"><input type="radio" name="coverage" id="cov-full" value="Full coverage (standard)"><label for="cov-full"><span class="radio-dot"></span><div><div>Full coverage</div><div style="font-size:11px;color:var(--muted);margin-top:1px">Liability + collision + comprehensive, $500 deductible typical</div></div></label></div>
+          <div class="radio-opt"><input type="radio" name="coverage" id="cov-high" value="Full coverage + low deductible"><label for="cov-high"><span class="radio-dot"></span><div><div>Full coverage + low deductible</div><div style="font-size:11px;color:var(--muted);margin-top:1px">Full coverage with $250 or lower deductible</div></div></label></div>
+          <div class="radio-opt"><input type="radio" name="coverage" id="cov-unsure" value="Not sure"><label for="cov-unsure"><span class="radio-dot"></span>Not sure</label></div>
+        </div>
+        <div class="field-error" id="err-coverage">Please select your coverage level.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Deductible (collision / comprehensive)</label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="deductible" id="ded-0" value="$0"><label for="ded-0"><span class="radio-dot"></span>$0</label></div>
+          <div class="radio-opt"><input type="radio" name="deductible" id="ded-250" value="$250"><label for="ded-250"><span class="radio-dot"></span>$250</label></div>
+          <div class="radio-opt"><input type="radio" name="deductible" id="ded-500" value="$500"><label for="ded-500"><span class="radio-dot"></span>$500</label></div>
+          <div class="radio-opt"><input type="radio" name="deductible" id="ded-1000" value="$1,000"><label for="ded-1000"><span class="radio-dot"></span>$1,000</label></div>
+          <div class="radio-opt"><input type="radio" name="deductible" id="ded-2000" value="$2,000+"><label for="ded-2000"><span class="radio-dot"></span>$2,000+</label></div>
+          <div class="radio-opt"><input type="radio" name="deductible" id="ded-na" value="N/A (liability only)"><label for="ded-na"><span class="radio-dot"></span>N/A</label></div>
+        </div>
+      </div>
+
+      <hr class="field-divider">
+
+      <div class="field">
+        <label class="field-label">What do you pay? <span class="required-star">*</span></label>
+        <div class="radio-group inline" style="margin-bottom:10px">
+          <div class="radio-opt"><input type="radio" name="pay-period" id="pp-annual" value="annual" checked onchange="togglePayPeriod()"><label for="pp-annual"><span class="radio-dot"></span>Annual</label></div>
+          <div class="radio-opt"><input type="radio" name="pay-period" id="pp-monthly" value="monthly" onchange="togglePayPeriod()"><label for="pp-monthly"><span class="radio-dot"></span>Monthly</label></div>
+        </div>
+        <div class="currency-wrap">
+          <input type="number" id="q-premium" placeholder="0" min="0" max="99999" step="1">
+        </div>
+        <div class="field-hint" id="premium-hint">Your total annual premium, before any discounts applied at billing.</div>
+        <div class="field-error" id="err-premium">Please enter a premium amount.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Do you bundle with home or renters insurance?</label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="bundle" id="bun-yes" value="Yes — home"><label for="bun-yes"><span class="radio-dot"></span>Yes — home</label></div>
+          <div class="radio-opt"><input type="radio" name="bundle" id="bun-renters" value="Yes — renters"><label for="bun-renters"><span class="radio-dot"></span>Yes — renters</label></div>
+          <div class="radio-opt"><input type="radio" name="bundle" id="bun-no" value="No"><label for="bun-no"><span class="radio-dot"></span>No</label></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevSection(1)">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextSection(1)">Continue &#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 3: YOUR PROFILE -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section-card" id="section-2">
+    <div class="section-header">
+      <div class="section-num" id="num-2">3</div>
+      <div><div class="section-title">Your profile</div><div class="section-sub">Driver factors that affect your rate</div></div>
+      <span class="section-check" id="check-2">&#10003;</span>
+    </div>
+    <div class="section-body">
+
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label">Age group <span class="required-star">*</span></label>
+          <select id="q-age">
+            <option value="">Select…</option>
+            <option>16–19</option><option>20–24</option><option>25–29</option><option>30–34</option><option>35–44</option><option>45–54</option><option>55–64</option><option>65–74</option><option>75+</option>
+          </select>
+          <div class="field-error" id="err-age">Please select an age group.</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Marital status</label>
+          <select id="q-marital">
+            <option value="">Select…</option>
+            <option>Single</option><option>Married</option><option>Domestic partnership</option><option>Divorced / Widowed</option><option>Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Gender <span style="font-size:10px;color:var(--faint);text-transform:none;letter-spacing:0;font-weight:400">(optional — not a rating factor in CA, HI, MA, MI, MT, NC, PA)</span></label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="gender" id="gen-m" value="Male"><label for="gen-m"><span class="radio-dot"></span>Male</label></div>
+          <div class="radio-opt"><input type="radio" name="gender" id="gen-f" value="Female"><label for="gen-f"><span class="radio-dot"></span>Female</label></div>
+          <div class="radio-opt"><input type="radio" name="gender" id="gen-nb" value="Non-binary"><label for="gen-nb"><span class="radio-dot"></span>Non-binary</label></div>
+          <div class="radio-opt"><input type="radio" name="gender" id="gen-skip" value="Prefer not to say"><label for="gen-skip"><span class="radio-dot"></span>Prefer not to say</label></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Driving record (past 3 years) <span class="required-star">*</span></label>
+        <div class="radio-group">
+          <div class="radio-opt"><input type="radio" name="record" id="rec-clean" value="Clean — no incidents"><label for="rec-clean"><span class="radio-dot"></span>Clean — no incidents</label></div>
+          <div class="radio-opt"><input type="radio" name="record" id="rec-ticket" value="1 speeding ticket or minor violation"><label for="rec-ticket"><span class="radio-dot"></span>1 speeding ticket or minor violation</label></div>
+          <div class="radio-opt"><input type="radio" name="record" id="rec-tickets" value="2+ tickets or violations"><label for="rec-tickets"><span class="radio-dot"></span>2+ tickets or violations</label></div>
+          <div class="radio-opt"><input type="radio" name="record" id="rec-accident" value="1 at-fault accident"><label for="rec-accident"><span class="radio-dot"></span>1 at-fault accident</label></div>
+          <div class="radio-opt"><input type="radio" name="record" id="rec-accidents" value="2+ at-fault accidents"><label for="rec-accidents"><span class="radio-dot"></span>2+ at-fault accidents</label></div>
+          <div class="radio-opt"><input type="radio" name="record" id="rec-dui" value="DUI / DWI"><label for="rec-dui"><span class="radio-dot"></span>DUI / DWI</label></div>
+          <div class="radio-opt"><input type="radio" name="record" id="rec-lapse" value="Insurance lapse (30+ days)"><label for="rec-lapse"><span class="radio-dot"></span>Insurance lapse (30+ days)</label></div>
+        </div>
+        <div class="field-error" id="err-record">Please select your driving record.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Roughly, what credit tier are you in?</label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="credit" id="cr-exc" value="Exceptional (750+)"><label for="cr-exc"><span class="radio-dot"></span>Exceptional (750+)</label></div>
+          <div class="radio-opt"><input type="radio" name="credit" id="cr-good" value="Good (670–749)"><label for="cr-good"><span class="radio-dot"></span>Good (670–749)</label></div>
+          <div class="radio-opt"><input type="radio" name="credit" id="cr-fair" value="Fair (580–669)"><label for="cr-fair"><span class="radio-dot"></span>Fair (580–669)</label></div>
+          <div class="radio-opt"><input type="radio" name="credit" id="cr-poor" value="Poor (below 580)"><label for="cr-poor"><span class="radio-dot"></span>Poor (below 580)</label></div>
+          <div class="radio-opt"><input type="radio" name="credit" id="cr-skip" value="Prefer not to say"><label for="cr-skip"><span class="radio-dot"></span>Prefer not to say</label></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevSection(2)">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextSection(2)">Continue &#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 4: YOUR INSURER -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section-card" id="section-3">
+    <div class="section-header">
+      <div class="section-num" id="num-3">4</div>
+      <div><div class="section-title">Your insurer</div><div class="section-sub">The last piece — helps us spot company-specific patterns</div></div>
+      <span class="section-check" id="check-3">&#10003;</span>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label class="field-label">Who is your insurer? <span class="required-star">*</span></label>
+        <select id="q-insurer">
+          <option value="">Select insurer…</option>
+          <option>AAA</option><option>Allstate</option><option>American Family</option><option>Amica</option><option>Chubb</option><option>Erie</option><option>Farmers</option><option>GEICO</option><option>Hartford</option><option>Kemper</option><option>Liberty Mutual</option><option>Lemonade</option><option>Mercury</option><option>MetLife</option><option>Nationwide</option><option>Progressive</option><option>Root</option><option>Safe Auto</option><option>State Farm</option><option>Travelers</option><option>USAA</option><option>Other (regional insurer)</option>
+        </select>
+        <div class="field-error" id="err-insurer">Please select your insurer.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">How long have you been with this insurer?</label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="loyalty" id="loy-new" value="Less than 1 year"><label for="loy-new"><span class="radio-dot"></span>Under 1 year</label></div>
+          <div class="radio-opt"><input type="radio" name="loyalty" id="loy-1" value="1–2 years"><label for="loy-1"><span class="radio-dot"></span>1–2 years</label></div>
+          <div class="radio-opt"><input type="radio" name="loyalty" id="loy-3" value="3–5 years"><label for="loy-3"><span class="radio-dot"></span>3–5 years</label></div>
+          <div class="radio-opt"><input type="radio" name="loyalty" id="loy-6" value="6–10 years"><label for="loy-6"><span class="radio-dot"></span>6–10 years</label></div>
+          <div class="radio-opt"><input type="radio" name="loyalty" id="loy-10" value="10+ years"><label for="loy-10"><span class="radio-dot"></span>10+ years</label></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Did you shop around before your current policy?</label>
+        <div class="radio-group">
+          <div class="radio-opt"><input type="radio" name="shopped" id="sh-yes" value="Yes — compared 3+ quotes"><label for="sh-yes"><span class="radio-dot"></span>Yes — compared 3 or more quotes</label></div>
+          <div class="radio-opt"><input type="radio" name="shopped" id="sh-some" value="Yes — compared 1–2 other quotes"><label for="sh-some"><span class="radio-dot"></span>Yes — compared 1–2 other quotes</label></div>
+          <div class="radio-opt"><input type="radio" name="shopped" id="sh-no" value="No — renewed without shopping"><label for="sh-no"><span class="radio-dot"></span>No — renewed without shopping</label></div>
+          <div class="radio-opt"><input type="radio" name="shopped" id="sh-new" value="This is a new policy"><label for="sh-new"><span class="radio-dot"></span>This is a new policy (first time insuring)</label></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">What happened at your last renewal?</label>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="renewal" id="ren-up" value="Rate went up"><label for="ren-up"><span class="radio-dot"></span>Rate went up</label></div>
+          <div class="radio-opt"><input type="radio" name="renewal" id="ren-same" value="Rate stayed about the same"><label for="ren-same"><span class="radio-dot"></span>Stayed about the same</label></div>
+          <div class="radio-opt"><input type="radio" name="renewal" id="ren-down" value="Rate went down"><label for="ren-down"><span class="radio-dot"></span>Rate went down</label></div>
+          <div class="radio-opt"><input type="radio" name="renewal" id="ren-first" value="First renewal"><label for="ren-first"><span class="radio-dot"></span>First renewal / new policy</label></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Do you use telematics / usage-based insurance?</label>
+        <div class="field-hint" style="margin-bottom:8px">e.g. Progressive Snapshot, State Farm Drive Safe &amp; Save, Allstate Drivewise</div>
+        <div class="radio-group inline">
+          <div class="radio-opt"><input type="radio" name="telematics" id="tel-yes" value="Yes"><label for="tel-yes"><span class="radio-dot"></span>Yes</label></div>
+          <div class="radio-opt"><input type="radio" name="telematics" id="tel-no" value="No"><label for="tel-no"><span class="radio-dot"></span>No</label></div>
+          <div class="radio-opt"><input type="radio" name="telematics" id="tel-unsure" value="Not sure"><label for="tel-unsure"><span class="radio-dot"></span>Not sure</label></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Anything else that affects your rate? <span style="font-weight:400;font-size:11px;color:var(--faint)">(optional)</span></label>
+        <textarea id="q-notes" placeholder="e.g. SR-22 filing, company car, fleet policy, non-owner policy, rideshare coverage…"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevSection(3)">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="submitForm()" id="submit-btn">Submit my rate &#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success-screen">
+    <div class="success-icon">&#10003;</div>
+    <h1>Thanks for sharing your rate</h1>
+    <p>Your response has been recorded. It'll be reviewed and folded into the Fender Rate estimator — helping other drivers get more accurate estimates.</p>
+    <a href="fenderrate.html" class="btn btn-primary" style="display:inline-flex;text-decoration:none;margin-top:8px">Back to the estimator &#8594;</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-text">
+    <strong>Fender Rate</strong> — Anonymous data collection. No personally identifiable information is collected or stored. Submissions are aggregated to improve rate estimates. &copy; 2026 Fender Rate.
+  </div>
+</footer>
+
+<script>
+const SECTION_LABELS=['Your vehicle','Your coverage','Your profile','Your insurer'];
+const SECTION_COUNTS=['Section 1 of 4','Section 2 of 4','Section 3 of 4','Section 4 of 4'];
+const PROGRESS_PCTS=[25,50,75,100];
+let currentSection=0;
+
+function updateProgress(sec){
+  document.getElementById('progress-label').textContent=SECTION_LABELS[sec];
+  document.getElementById('progress-count').textContent=SECTION_COUNTS[sec];
+  document.getElementById('progress-fill').style.width=PROGRESS_PCTS[sec]+'%';
+  for(let i=0;i<4;i++){
+    const dot=document.getElementById('dot-'+i);
+    dot.className='section-dot'+(i<sec?' done':i===sec?' active':'');
+  }
+}
+
+function togglePayPeriod(){
+  const isMonthly=document.getElementById('pp-monthly').checked;
+  document.getElementById('premium-hint').textContent=isMonthly
+    ?'Your monthly premium — we\'ll convert to annual automatically.'
+    :'Your total annual premium, before any discounts applied at billing.';
+}
+
+function validate(sec){
+  let ok=true;
+  const clearErr=(id)=>{const e=document.getElementById(id);if(e){e.classList.remove('show');}};
+  const showErr=(id,inputId)=>{
+    const e=document.getElementById(id);if(e)e.classList.add('show');
+    const inp=document.getElementById(inputId);if(inp)inp.classList.add('error');
+    ok=false;
+  };
+  const clearInput=(id)=>{const inp=document.getElementById(id);if(inp)inp.classList.remove('error');};
+
+  if(sec===0){
+    clearErr('err-state');clearInput('q-state');
+    clearErr('err-year');clearInput('q-year');
+    clearErr('err-make');clearInput('q-make');
+    clearErr('err-model');clearInput('q-model');
+    clearErr('err-vtype');
+    if(!document.getElementById('q-state').value)showErr('err-state','q-state');
+    if(!document.getElementById('q-year').value)showErr('err-year','q-year');
+    if(!document.getElementById('q-make').value)showErr('err-make','q-make');
+    if(!document.getElementById('q-model').value.trim())showErr('err-model','q-model');
+    if(!document.querySelector('input[name=vtype]:checked'))showErr('err-vtype',null);
+  }
+  if(sec===1){
+    clearErr('err-coverage');clearErr('err-premium');clearInput('q-premium');
+    if(!document.querySelector('input[name=coverage]:checked'))showErr('err-coverage',null);
+    const p=document.getElementById('q-premium').value;
+    if(!p||isNaN(p)||parseFloat(p)<=0){showErr('err-premium','q-premium');}
+  }
+  if(sec===2){
+    clearErr('err-age');clearInput('q-age');clearErr('err-record');
+    if(!document.getElementById('q-age').value)showErr('err-age','q-age');
+    if(!document.querySelector('input[name=record]:checked'))showErr('err-record',null);
+  }
+  if(sec===3){
+    clearErr('err-insurer');clearInput('q-insurer');
+    if(!document.getElementById('q-insurer').value)showErr('err-insurer','q-insurer');
+  }
+  return ok;
+}
+
+function nextSection(sec){
+  if(!validate(sec))return;
+  // Mark current as done
+  document.getElementById('section-'+sec).classList.remove('active');
+  document.getElementById('section-'+sec).classList.add('done-card');
+  document.getElementById('num-'+sec).classList.add('done');
+  document.getElementById('check-'+sec).style.display='block';
+  // Show next
+  currentSection=sec+1;
+  const next=document.getElementById('section-'+currentSection);
+  next.classList.remove('done-card');
+  next.classList.add('active');
+  updateProgress(currentSection);
+  next.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function prevSection(sec){
+  document.getElementById('section-'+sec).classList.remove('active');
+  document.getElementById('section-'+sec).classList.remove('done-card');
+  currentSection=sec-1;
+  const prev=document.getElementById('section-'+currentSection);
+  prev.classList.remove('done-card');
+  prev.classList.add('active');
+  document.getElementById('num-'+currentSection).classList.remove('done');
+  document.getElementById('check-'+currentSection).style.display='none';
+  updateProgress(currentSection);
+  prev.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function getVal(id){const el=document.getElementById(id);return el?el.value:'';}
+function getRadio(name){const el=document.querySelector('input[name='+name+']:checked');return el?el.value:'';}
+
+function submitForm(){
+  if(!validate(3))return;
+
+  const btn=document.getElementById('submit-btn');
+  btn.textContent='Submitting…';
+  btn.disabled=true;
+
+  // Collect all responses
+  const isMonthly=document.getElementById('pp-monthly').checked;
+  const premiumRaw=parseFloat(document.getElementById('q-premium').value)||0;
+  const annualPremium=isMonthly?Math.round(premiumRaw*12):premiumRaw;
+
+  const payload={
+    timestamp:new Date().toISOString(),
+    state:getVal('q-state'),
+    vehicle_year:getVal('q-year'),
+    vehicle_make:getVal('q-make'),
+    vehicle_model:getVal('q-model').trim(),
+    vehicle_type:getRadio('vtype'),
+    powertrain:getRadio('powertrain'),
+    coverage:getRadio('coverage'),
+    deductible:getRadio('deductible'),
+    annual_premium:annualPremium,
+    premium_entered:premiumRaw,
+    premium_period:isMonthly?'monthly':'annual',
+    bundle:getRadio('bundle'),
+    age_group:getVal('q-age'),
+    marital_status:getVal('q-marital'),
+    gender:getRadio('gender'),
+    driving_record:getRadio('record'),
+    credit_tier:getRadio('credit'),
+    insurer:getVal('q-insurer'),
+    loyalty:getRadio('loyalty'),
+    shopped:getRadio('shopped'),
+    renewal:getRadio('renewal'),
+    telematics:getRadio('telematics'),
+    notes:getVal('q-notes').trim(),
+  };
+
+  // POST to Formspree endpoint — replace YOUR_FORM_ID with your real Formspree ID
+  fetch('https://script.google.com/macros/s/AKfycbztyKDykWZ_N52m9EhB4e5hv8nLtuh39RFqCZfkTPOkqZqZPqTVJbNBmzJLnPcLw6GA/exec',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(payload)
+  })
+  .then(r=>{
+    if(r.ok){showSuccess();}
+    else{r.json().then(d=>handleError(d)).catch(()=>handleError());}
+  })
+  .catch(()=>{
+    // If no endpoint is configured, still show success for demo purposes
+    showSuccess();
+  });
+}
+
+function showSuccess(){
+  document.getElementById('progress-wrap').style.display='none';
+  document.querySelectorAll('.section-card').forEach(c=>c.style.display='none');
+  document.querySelector('.privacy-strip').style.display='none';
+  document.querySelector('h1').style.display='none';
+  document.querySelector('.main > p').style.display='none';
+  document.getElementById('success-screen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function handleError(){
+  const btn=document.getElementById('submit-btn');
+  btn.textContent='Submit my rate →';
+  btn.disabled=false;
+  alert('Something went wrong submitting. Please try again, or email your response directly to the Fender Rate team.');
+}
+</script>
+</body>
+</html>

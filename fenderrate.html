@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fender Rate — Car Insurance Rate Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F7F4;--surface:#FFFFFF;--border:#E2E0DC;--border-strong:#C8C4BE;
+  --text:#1A1A1A;--muted:#6B7280;--faint:#9CA3AF;
+  --orange:#E8521A;--orange-light:#FDF0EB;--orange-mid:#F97316;
+  --green:#16A34A;--green-light:#F0FDF4;
+  --blue:#2563EB;--blue-light:#EFF6FF;
+  --red:#DC2626;--red-light:#FEF2F2;
+  --amber:#D97706;--amber-light:#FFFBEB;
+  --slate:#374151;--radius:10px;--radius-sm:6px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:32px;height:56px}
+.wordmark{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.wordmark-dent{color:var(--orange);font-size:22px;line-height:1}
+.nav-tabs{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:6px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:transparent;white-space:nowrap;transition:color .15s,background .15s}
+.nav-tab:hover{color:var(--text);background:var(--bg)}
+.nav-tab.active{color:var(--orange);background:var(--orange-light)}
+.nav-cta{margin-left:auto;padding:7px 16px;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:opacity .15s;flex-shrink:0}
+.nav-cta:hover{opacity:.88}
+
+/* LAYOUT */
+.page{display:none;max-width:1100px;margin:0 auto;padding:32px 24px 64px}
+.page.active{display:block}
+.page-hero{margin-bottom:28px}
+.page-hero h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;line-height:1.25;margin-bottom:6px}
+.page-hero p{color:var(--muted);font-size:14px;max-width:560px}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.tag-orange{background:var(--orange-light);color:var(--orange)}
+.tag-green{background:var(--green-light);color:var(--green)}
+.tag-blue{background:var(--blue-light);color:var(--blue)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px}
+.card-sm{padding:14px 18px}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:700px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* FORMS */
+label.field-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px}
+select,input[type=text],input[type=email],textarea{
+  width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);color:var(--text);
+  transition:border-color .15s;appearance:none;-webkit-appearance:none
+}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--orange)}
+.field{margin-bottom:14px}
+input[type=range]{width:100%;accent-color:var(--orange)}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s,transform .1s;border:1px solid transparent}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn-primary:hover{opacity:.88}
+.btn-outline{background:transparent;color:var(--text);border-color:var(--border-strong)}
+.btn-outline:hover{background:var(--bg)}
+.btn-full{width:100%}
+
+/* ESTIMATOR */
+.mode-toggle{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px;width:fit-content}
+.mode-btn{padding:6px 16px;border-radius:4px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .15s}
+.mode-btn.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.result-big{font-family:'DM Serif Display',serif;font-size:42px;line-height:1}
+.result-mo{font-size:16px;color:var(--muted);margin-left:8px}
+.bar-track{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:8px}
+.bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-block}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}
+.badge-gray{background:var(--bg);color:var(--muted)}
+.factor-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)}
+.factor-row:last-child{border:none}
+.mini-track{height:3px;background:var(--bg);border-radius:2px;margin-bottom:7px}
+.mini-fill{height:100%;border-radius:2px;transition:width .3s}
+.cov-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:var(--radius-sm);cursor:pointer;border:1px solid transparent;margin-bottom:4px;transition:background .12s}
+.cov-row:hover{background:var(--bg)}
+.cov-row.active{background:var(--orange-light);border-color:#F9C5AE}
+.cov-row.active .cov-label,.cov-row.active .cov-price{color:var(--orange)}
+.cov-label{font-size:13px;color:var(--muted)}
+.cov-price{font-size:13px;font-weight:600;color:var(--text)}
+.age-row{display:flex;align-items:center;gap:10px}
+.age-row input{flex:1}
+.age-val{font-size:13px;font-weight:600;min-width:36px;text-align:right}
+.age-hint{font-size:11px;color:var(--faint);margin-top:3px}
+.tip-warn{font-size:12px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--amber-light);color:var(--amber);margin-top:8px;display:none;border-left:3px solid var(--amber)}
+.hh-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px}
+.hh-row+.hh-row{border-top:1px solid var(--border)}
+.hh-total{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 0;border-top:2px solid var(--border-strong);margin-top:4px}
+.disabled-block{opacity:.38;pointer-events:none}
+.warn-note{font-size:11px;color:var(--amber);margin-left:6px;font-weight:400;text-transform:none;letter-spacing:0}
+
+/* STAT CARDS */
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.stat-value{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text)}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* MAP */
+#map-svg path{cursor:pointer;transition:fill .15s}
+#map-svg path:hover{opacity:.8}
+.map-tooltip{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;pointer-events:none;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1);z-index:200;min-width:160px}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:2px solid var(--border);background:var(--bg);position:sticky;top:0}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border)}
+.data-table tr:hover td{background:var(--bg)}
+.data-table tr:last-child td{border:none}
+.tbl-wrapper{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;max-height:500px;overflow-y:auto}
+.sortable{cursor:pointer;user-select:none}
+.sortable:hover{color:var(--text)}
+.sort-arrow{margin-left:4px;opacity:.5}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+.pill-green{background:var(--green-light);color:var(--green)}
+.pill-red{background:var(--red-light);color:var(--red)}
+.pill-amber{background:var(--amber-light);color:var(--amber)}
+.pill-blue{background:var(--blue-light);color:var(--blue)}
+.pill-gray{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+
+/* SEARCH */
+.search-bar{position:relative;margin-bottom:16px}
+.search-bar input{padding-left:36px}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:15px;pointer-events:none}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
+.filter-btn:hover,.filter-btn.active{background:var(--orange-light);border-color:#F9C5AE;color:var(--orange)}
+
+/* SURVEY */
+.survey-card{background:linear-gradient(135deg,var(--orange-light),var(--surface));border:1px solid #F9C5AE;border-radius:var(--radius);padding:32px;text-align:center}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:24px;margin-top:48px}
+.footer-inner{max-width:1100px;margin:0 auto;font-size:12px;color:var(--faint);line-height:1.7}
+.footer-inner strong{color:var(--muted)}
+
+/* DIVIDER */
+.section-divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+/* CHART */
+.chart-wrap{position:relative;width:100%;height:320px}
+
+/* EV TABLE alt row */
+.ev-row-ev{background:#EFF6FF}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="wordmark" href="#" onclick="showTab('estimator');return false">
+      <span class="wordmark-dent">⌒</span> Fender Rate
+    </a>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('estimator')">Rate estimator</button>
+      <button class="nav-tab" onclick="showTab('map')">State map</button>
+      <button class="nav-tab" onclick="showTab('ev')">EV vs. gas</button>
+      <button class="nav-tab" onclick="showTab('models')">Model lookup</button>
+      <button class="nav-tab" onclick="showTab('submit')">Submit your rate</button>
+    </div>
+    <button class="nav-cta btn" onclick="showTab('submit')">Share your rate</button>
+  </div>
+</nav>
+
+<!-- TOOLTIP -->
+<div class="map-tooltip" id="map-tooltip"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 1: ESTIMATOR -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page active" id="page-estimator">
+  <div class="page-hero">
+    <span class="tag tag-orange">2026 data</span>
+    <h1>What should you be paying<br>for car insurance?</h1>
+    <p>Adjust your profile and get an instant estimate based on 2026 national averages from MoneyGeek, Insurify, CarInsurance.com, and ValuePenguin.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="stat-card"><div class="stat-label">National avg (full coverage)</div><div class="stat-value">$2,356/yr</div><div class="stat-sub">$208/mo</div></div>
+    <div class="stat-card"><div class="stat-label">Cheapest state</div><div class="stat-value">Vermont</div><div class="stat-sub">$1,478/yr</div></div>
+    <div class="stat-card"><div class="stat-label">Most expensive state</div><div class="stat-value">Louisiana</div><div class="stat-sub">$3,999/yr</div></div>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-single" onclick="setMode('single')">&#128664; Single vehicle</button>
+    <button class="mode-btn" id="btn-household" onclick="setMode('household')">&#128106; Household (2 cars)</button>
+  </div>
+
+  <div class="grid-2">
+    <!-- LEFT: inputs -->
+    <div>
+      <div id="d1-label" style="display:none"><p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Driver 1 &amp; vehicle 1</p></div>
+
+      <div class="field"><label class="field-label">State</label>
+        <select id="s-state" onchange="calc()">
+          <option value="2356">National average</option>
+          <option value="1855">Alabama</option><option value="1350">Alaska</option><option value="2230">Arizona</option><option value="1680">Arkansas</option><option value="2967">California</option><option value="2100">Colorado</option><option value="2900">Connecticut</option><option value="2530">Delaware</option><option value="3465">Washington D.C.</option><option value="3672">Florida</option><option value="2300">Georgia</option><option value="1350">Hawaii</option><option value="1390">Idaho</option><option value="1900">Illinois</option><option value="1500">Indiana</option><option value="1370">Iowa</option><option value="1760">Kansas</option><option value="2200">Kentucky</option><option value="3999">Louisiana</option><option value="1478">Maine</option><option value="3300">Maryland</option><option value="2200">Massachusetts</option><option value="2815">Michigan</option><option value="1780">Minnesota</option><option value="1850">Mississippi</option><option value="2100">Missouri</option><option value="1550">Montana</option><option value="1630">Nebraska</option><option value="3963">Nevada</option><option value="1350">New Hampshire</option><option value="3200">New Jersey</option><option value="1800">New Mexico</option><option value="3702">New York</option><option value="1380">North Carolina</option><option value="1380">North Dakota</option><option value="1400">Ohio</option><option value="2050">Oklahoma</option><option value="1950">Oregon</option><option value="2100">Pennsylvania</option><option value="2400">Rhode Island</option><option value="2100">South Carolina</option><option value="1450">South Dakota</option><option value="1680">Tennessee</option><option value="2400">Texas</option><option value="1950">Utah</option><option value="1478">Vermont</option><option value="1700">Virginia</option><option value="2000">Washington</option><option value="1600">West Virginia</option><option value="1440">Wisconsin</option><option value="1200">Wyoming</option>
+        </select>
+      </div>
+
+      <div class="grid-2" style="gap:12px">
+        <div class="field"><label class="field-label">Age group</label>
+          <select id="s-age" onchange="calc()">
+            <option value="4.64">16</option><option value="3.74">17</option><option value="3.06">18</option><option value="2.45">19</option><option value="2.20">20</option><option value="1.98">21</option><option value="1.82">22</option><option value="1.72">23</option><option value="1.62">24</option><option value="1.36">25</option><option value="1.18">26–29</option><option value="1.06">30–34</option><option value="1.00" selected>35–44</option><option value="0.97">45–54</option><option value="0.95">55–64</option><option value="1.00">65–69</option><option value="1.08">70–74</option><option value="1.16">75+</option>
+          </select>
+        </div>
+        <div class="field" id="g1-field"><label class="field-label">Gender <span class="warn-note" id="g1-note"></span></label>
+          <select id="s-gender" onchange="calc()">
+            <option value="1.00" selected>Not specified</option>
+            <option value="1.03" data-teen="1.11">Male</option>
+            <option value="0.97" data-teen="0.90">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:12px">
+        <div class="field"><label class="field-label">Driving record</label>
+          <select id="s-record" onchange="calc()">
+            <option value="1.00" selected>Clean record</option><option value="1.20">1 speeding ticket</option><option value="1.63">2 speeding tickets</option><option value="1.53">Reckless driving</option><option value="1.63">1 at-fault accident</option><option value="1.91">2+ accidents</option><option value="1.41">Insurance lapse</option><option value="2.06">DUI / DWI</option>
+          </select>
+        </div>
+        <div class="field" id="cr-field"><label class="field-label">Credit tier <span class="warn-note" id="cr-note"></span></label>
+          <select id="s-credit" onchange="calc()">
+            <option value="0.79">Exceptional (800+)</option><option value="0.83">Very good (740–799)</option><option value="1.00" selected>Good (670–739)</option><option value="1.28">Fair (580–669)</option><option value="1.65">Poor (under 580)</option><option value="1.35">No credit history</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:12px">
+        <div class="field"><label class="field-label">Marital status</label>
+          <select id="s-marital" onchange="calc()">
+            <option value="1.00" selected>Single</option><option value="0.95">Married</option><option value="1.03">Divorced / Widowed</option>
+          </select>
+        </div>
+        <div class="field"><label class="field-label">Coverage level</label>
+          <select id="s-coverage" onchange="calc()">
+            <option value="0.31">Minimum / Liability only</option><option value="1.00" selected>Full coverage</option><option value="1.15">Full + low deductible</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field"><label class="field-label">Vehicle type</label>
+        <select id="s-vehicle" onchange="calc()">
+          <option value="0.88">Budget SUV / Crossover (CR-V, Forester)</option><option value="0.92">Budget Truck (F-150, Silverado)</option><option value="0.87">Budget Minivan (Odyssey, Sienna)</option><option value="0.97">Mainstream Sedan (Accord, Camry)</option><option value="1.00" selected>Mainstream SUV (Explorer, Tahoe)</option><option value="1.20">Luxury SUV (BMW X5, Mercedes GLE)</option><option value="1.25">Luxury Sedan (BMW 3 Series, Audi A6)</option><option value="1.68">Performance / Sports Car (BMW M5, Porsche 911)</option><option value="1.02">Budget EV (Equinox EV, Ioniq 5)</option><option value="1.44">Mid-range EV (Tesla Model 3, Mach-E)</option><option value="1.85">Premium EV (Tesla Model S/X, Rivian)</option><option value="2.20">Luxury EV (Audi e-tron, Mercedes EQS)</option>
+        </select>
+      </div>
+
+      <div class="field"><label class="field-label">Vehicle age</label>
+        <div class="age-row"><span style="font-size:12px;color:var(--faint)">New</span><input type="range" id="s-vage" min="0" max="20" step="1" value="3" oninput="calc()"><span style="font-size:12px;color:var(--faint)">20 yrs</span><span class="age-val" id="vage-out">3 yrs</span></div>
+        <p class="age-hint" id="vage-hint"></p>
+        <div class="tip-warn" id="drop-tip"></div>
+      </div>
+
+      <!-- DRIVER 2 -->
+      <div id="d2-block" style="display:none">
+        <hr class="section-divider">
+        <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Driver 2 &amp; vehicle 2</p>
+        <div class="grid-2" style="gap:12px">
+          <div class="field"><label class="field-label">Age group</label>
+            <select id="s-age2" onchange="calc()">
+              <option value="4.64">16</option><option value="3.74">17</option><option value="3.06">18</option><option value="2.45">19</option><option value="2.20">20</option><option value="1.98">21</option><option value="1.82">22</option><option value="1.72">23</option><option value="1.62">24</option><option value="1.36">25</option><option value="1.18">26–29</option><option value="1.06">30–34</option><option value="1.00" selected>35–44</option><option value="0.97">45–54</option><option value="0.95">55–64</option><option value="1.00">65–69</option><option value="1.08">70–74</option><option value="1.16">75+</option>
+            </select>
+          </div>
+          <div class="field" id="g2-field"><label class="field-label">Gender <span class="warn-note" id="g2-note"></span></label>
+            <select id="s-gender2" onchange="calc()">
+              <option value="1.00" selected>Not specified</option><option value="1.03" data-teen="1.11">Male</option><option value="0.97" data-teen="0.90">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2" style="gap:12px">
+          <div class="field"><label class="field-label">Driving record</label>
+            <select id="s-record2" onchange="calc()">
+              <option value="1.00" selected>Clean record</option><option value="1.20">1 speeding ticket</option><option value="1.63">2 speeding tickets</option><option value="1.53">Reckless driving</option><option value="1.63">1 at-fault accident</option><option value="1.91">2+ accidents</option><option value="1.41">Insurance lapse</option><option value="2.06">DUI / DWI</option>
+            </select>
+          </div>
+          <div class="field"><label class="field-label">Coverage level</label>
+            <select id="s-coverage2" onchange="calc()">
+              <option value="0.31">Minimum / Liability only</option><option value="1.00" selected>Full coverage</option><option value="1.15">Full + low deductible</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label class="field-label">Vehicle type</label>
+          <select id="s-vehicle2" onchange="calc()">
+            <option value="0.88">Budget SUV / Crossover (CR-V, Forester)</option><option value="0.92">Budget Truck (F-150, Silverado)</option><option value="0.87">Budget Minivan (Odyssey, Sienna)</option><option value="0.97" selected>Mainstream Sedan (Accord, Camry)</option><option value="1.00">Mainstream SUV (Explorer, Tahoe)</option><option value="1.20">Luxury SUV (BMW X5, Mercedes GLE)</option><option value="1.25">Luxury Sedan (BMW 3 Series, Audi A6)</option><option value="1.68">Performance / Sports Car</option><option value="1.02">Budget EV (Equinox EV, Ioniq 5)</option><option value="1.44">Mid-range EV (Tesla Model 3, Mach-E)</option><option value="1.85">Premium EV (Tesla Model S/X, Rivian)</option><option value="2.20">Luxury EV (Audi e-tron, Mercedes EQS)</option>
+          </select>
+        </div>
+        <div class="field"><label class="field-label">Vehicle 2 age</label>
+          <div class="age-row"><span style="font-size:12px;color:var(--faint)">New</span><input type="range" id="s-vage2" min="0" max="20" step="1" value="5" oninput="calc()"><span style="font-size:12px;color:var(--faint)">20 yrs</span><span class="age-val" id="vage2-out">5 yrs</span></div>
+        </div>
+        <div class="field"><label class="field-label">Multi-car discount</label>
+          <select id="s-multicar" onchange="calc()">
+            <option value="0.75">25% — GEICO / State Farm (typical)</option><option value="0.72" selected>28% — national average</option><option value="0.66">34% — Nationwide</option><option value="0.52">48% — Farmers (highest)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: results -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <!-- Single result -->
+      <div class="card" id="single-card">
+        <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Your estimated annual premium</p>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px">
+          <span class="result-big" id="r-annual">$2,356</span>
+          <span class="result-mo" id="r-mo">$196/mo</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="r-bar" style="width:20%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--faint)"><span>$800</span><span>$15,000</span></div>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge" id="r-vs"></span>
+          <span class="badge badge-gray" id="r-tier"></span>
+        </div>
+        <p style="font-size:11px;color:var(--faint);margin-top:10px">Per-vehicle estimate for one driver. Switch to Household view to see a two-car total.</p>
+      </div>
+
+      <!-- Household result -->
+      <div class="card" id="hh-card" style="display:none">
+        <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Household — 2 vehicles, 1 policy</p>
+        <div class="hh-row"><span style="color:var(--muted)">Vehicle 1 (pre-discount)</span><span id="hh-v1">—</span></div>
+        <div class="hh-row"><span style="color:var(--muted)">Vehicle 2 (pre-discount)</span><span id="hh-v2">—</span></div>
+        <div class="hh-row"><span style="color:var(--muted)">Subtotal (separate policies)</span><span id="hh-sub">—</span></div>
+        <div class="hh-row"><span style="color:var(--green)" id="hh-disc-label">Multi-car discount (28%)</span><span style="color:var(--green);font-weight:600" id="hh-disc">—</span></div>
+        <div class="hh-total">
+          <div><div style="font-size:13px;font-weight:600">Combined policy total</div><span class="badge badge-green" style="margin-top:4px" id="hh-savings-badge">Saves $830/yr</span></div>
+          <div style="text-align:right"><div class="result-big" id="hh-total" style="font-size:34px;color:var(--green)">—</div><div style="font-size:13px;color:var(--muted)" id="hh-total-mo">—</div></div>
+        </div>
+        <p style="font-size:11px;color:var(--faint);margin-top:10px">Both drivers must share an address. Credit tier uses Driver 1's score. Source: MoneyGeek 2026.</p>
+      </div>
+
+      <!-- Vehicle age curve -->
+      <div class="card card-sm">
+        <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Vehicle age impact on rate</p>
+        <div id="age-curve" style="position:relative;height:72px"></div>
+        <p style="font-size:10px;color:var(--faint);margin-top:4px">Rate multiplier vs. brand-new. MoneyGeek, Compare.com 2026.</p>
+      </div>
+
+      <!-- Factor breakdown -->
+      <div class="card card-sm" id="single-factors">
+        <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">What's moving your rate</p>
+        <div id="r-factors"></div>
+        <p style="font-size:10px;color:var(--faint);margin-top:8px">vs. 35–44, clean, good credit, single, national baseline</p>
+      </div>
+
+      <!-- Coverage compare -->
+      <div class="card card-sm">
+        <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px" id="cov-title">Coverage comparison</p>
+        <div id="r-coverage"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 2: STATE MAP -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page" id="page-map">
+  <div class="page-hero">
+    <span class="tag tag-blue">All 50 states + D.C.</span>
+    <h1>Car insurance rates across America</h1>
+    <p>Click any state to see its average annual full-coverage premium, monthly rate, and 2025 year-over-year change.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="stat-card"><div class="stat-label">Cheapest state</div><div class="stat-value" style="color:var(--green)">Vermont</div><div class="stat-sub">$1,478/yr · $123/mo</div></div>
+    <div class="stat-card"><div class="stat-label">Most expensive state</div><div class="stat-value" style="color:var(--red)">Louisiana</div><div class="stat-sub">$3,999/yr · $333/mo</div></div>
+    <div class="stat-card"><div class="stat-label">Biggest 2025 increase</div><div class="stat-value" style="color:var(--amber)">New Jersey</div><div class="stat-sub">+15.8% in 2025</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;padding:16px 24px">
+    <div id="map-container" style="width:100%;overflow:hidden"></div>
+    <div style="display:flex;gap:24px;justify-content:center;margin-top:12px;font-size:11px;color:var(--muted)">
+      <span>&#9632; <span style="color:#C6EFCE">Cheapest</span></span>
+      <span>&#9632; <span style="color:#FFEB9C">Near avg</span></span>
+      <span>&#9632; <span style="color:#FFC7CE">Most expensive</span></span>
+    </div>
+  </div>
+
+  <div id="state-detail" style="display:none" class="card">
+    <p style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px" id="sd-state-name">State selected</p>
+    <div class="grid-3">
+      <div><div class="stat-label">Annual (full coverage)</div><div style="font-size:22px;font-family:'DM Serif Display',serif" id="sd-ann">—</div></div>
+      <div><div class="stat-label">Monthly</div><div style="font-size:22px;font-family:'DM Serif Display',serif" id="sd-mo">—</div></div>
+      <div><div class="stat-label">2025 change</div><div style="font-size:22px;font-family:'DM Serif Display',serif" id="sd-chg">—</div></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px" id="sd-note"></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 3: EV vs GAS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page" id="page-ev">
+  <div class="page-hero">
+    <span class="tag tag-blue">39 EV models</span>
+    <h1>EV vs. gas insurance costs</h1>
+    <p>See how electric vehicles compare to their gas equivalents, what tier they fall in, and how the EV premium gap is changing.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="stat-card"><div class="stat-label">Cheapest EV to insure</div><div class="stat-value" style="color:var(--green)">Chevy Silverado EV</div><div class="stat-sub">$1,947/yr — cheaper than many gas SUVs</div></div>
+    <div class="stat-card"><div class="stat-label">Most expensive EV</div><div class="stat-value" style="color:var(--red)">Audi SQ8 e-tron</div><div class="stat-sub">$10,402/yr</div></div>
+    <div class="stat-card"><div class="stat-label">EV premium gap (2026)</div><div class="stat-value" style="color:var(--amber)">+18%</div><div class="stat-sub">vs. gas avg — down from +23% in 2025</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <p style="font-size:13px;font-weight:600;margin-bottom:12px">Average annual full-coverage premium by EV tier</p>
+    <div class="chart-wrap"><canvas id="ev-chart" role="img" aria-label="Bar chart of EV insurance costs by tier"></canvas></div>
+  </div>
+
+  <div class="filter-row" id="ev-filters">
+    <button class="filter-btn active" onclick="filterEV('all',this)">All EVs</button>
+    <button class="filter-btn" onclick="filterEV('budget',this)">Budget (&lt;$2,200)</button>
+    <button class="filter-btn" onclick="filterEV('mid',this)">Mid ($2,200–$3,200)</button>
+    <button class="filter-btn" onclick="filterEV('premium',this)">Premium ($3,200+)</button>
+  </div>
+
+  <div class="tbl-wrapper">
+    <table class="data-table" id="ev-table">
+      <thead><tr>
+        <th class="sortable" onclick="sortEV('make')">Make / Model <span class="sort-arrow">↕</span></th>
+        <th class="sortable" onclick="sortEV('subtype')">Subtype <span class="sort-arrow">↕</span></th>
+        <th class="sortable" onclick="sortEV('ann')">Annual (full) <span class="sort-arrow">↕</span></th>
+        <th class="sortable" onclick="sortEV('mo')">Monthly <span class="sort-arrow">↕</span></th>
+        <th>Comparable gas model</th>
+        <th class="sortable" onclick="sortEV('gap')">EV premium gap <span class="sort-arrow">↕</span></th>
+        <th>Tier</th>
+      </tr></thead>
+      <tbody id="ev-tbody"></tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:var(--faint);margin-top:8px">Source: MoneyGeek 2026 (79 insurers, Quadrant Information Services). Profile: 40-yr-old, clean record, good credit, full coverage 100/300/100, $500 deductible.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 4: MODEL LOOKUP -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page" id="page-models">
+  <div class="page-hero">
+    <span class="tag tag-orange">100+ models</span>
+    <h1>Look up your car's insurance cost</h1>
+    <p>Search by make, model, or vehicle type. Rates are 2026 annual full-coverage averages for a 40-year-old driver with a clean record.</p>
+  </div>
+
+  <div class="search-bar"><span class="search-icon">&#128269;</span><input type="text" id="model-search" placeholder="Search make or model — e.g. Tesla, RAV4, F-150…" oninput="filterModels()"></div>
+
+  <div class="filter-row" id="model-filters">
+    <button class="filter-btn active" onclick="filterModelCat('All',this)">All</button>
+    <button class="filter-btn" onclick="filterModelCat('Budget',this)">Budget</button>
+    <button class="filter-btn" onclick="filterModelCat('Mainstream',this)">Mainstream</button>
+    <button class="filter-btn" onclick="filterModelCat('Luxury',this)">Luxury</button>
+    <button class="filter-btn" onclick="filterModelCat('Performance',this)">Performance</button>
+    <button class="filter-btn" onclick="filterModelCat('EV',this)">EV</button>
+    <button class="filter-btn" onclick="filterModelCat('Ultra-Luxury',this)">Ultra-luxury</button>
+  </div>
+
+  <div class="tbl-wrapper">
+    <table class="data-table" id="model-table">
+      <thead><tr>
+        <th class="sortable" onclick="sortModels('make')">Make <span class="sort-arrow">↕</span></th>
+        <th class="sortable" onclick="sortModels('model')">Model <span class="sort-arrow">↕</span></th>
+        <th>Type</th>
+        <th>Category</th>
+        <th class="sortable" onclick="sortModels('ann')">Annual (full) <span class="sort-arrow">↕</span></th>
+        <th class="sortable" onclick="sortModels('mo')">Monthly <span class="sort-arrow">↕</span></th>
+        <th>vs. avg</th>
+      </tr></thead>
+      <tbody id="model-tbody"></tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:var(--faint);margin-top:8px">Sources: Insure.com, MoneyGeek, CarInsurance.com, Compare.com 2026. "—" indicates data not available from current sources.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 5: SUBMIT -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page" id="page-submit">
+  <div class="page-hero">
+    <span class="tag tag-green">Community data</span>
+    <h1>Share your actual rate</h1>
+    <p>Help make Fender Rate better. Your real-world data helps us improve estimates and surface patterns that published averages miss.</p>
+  </div>
+
+  <div class="grid-2" style="gap:24px;align-items:start">
+    <div>
+      <div class="survey-card" style="text-align:left;margin-bottom:20px">
+        <p style="font-size:22px;font-family:'DM Serif Display',serif;margin-bottom:8px">Got 2 minutes?</p>
+        <p style="font-size:14px;color:var(--slate);margin-bottom:20px;line-height:1.6">Tell us your state, vehicle, driver profile, and what you're actually paying. We never ask for your name, email, or any identifying information.</p>
+        <a href="fenderrate-survey.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;padding:10px 24px;font-size:14px">Open the survey</a>
+        <p style="font-size:11px;color:var(--faint);margin-top:12px">Opens in a new tab. Anonymous. No account required.</p>
+      </div>
+
+      <div class="card card-sm">
+        <p style="font-size:13px;font-weight:600;margin-bottom:8px">What we'll ask</p>
+        <ul style="font-size:13px;color:var(--muted);line-height:2;padding-left:16px">
+          <li>Your state (not city or ZIP)</li>
+          <li>Vehicle year, make, and model</li>
+          <li>Coverage level and deductible</li>
+          <li>Age group and marital status</li>
+          <li>Your actual annual or monthly premium</li>
+          <li>Your insurer (optional)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card card-sm">
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px">Why this matters</p>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">Published averages are based on standardized profiles — a 40-year-old with a clean record, specific coverage limits, and a 2023 mid-size sedan. Your real rate depends on dozens of factors those averages don't capture. Community data fills the gaps.</p>
+      </div>
+      <div class="card card-sm">
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px">What happens with your data</p>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">Submissions are reviewed and aggregated. Individual responses are never published. Data that's significantly outside normal ranges for a profile is flagged for manual review before being included in estimates.</p>
+      </div>
+      <div class="card card-sm" style="background:var(--orange-light);border-color:#F9C5AE">
+        <p style="font-size:13px;font-weight:600;color:var(--orange);margin-bottom:4px">Currently collecting</p>
+        <p style="font-size:13px;color:var(--slate);line-height:1.7">EV rates in California and New York · Rates for drivers 70+ · Rates for high-risk profiles (DUI, lapse) · Multi-car household actuals</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <p><strong>Fender Rate</strong> is an independent research tool. Estimates are based on publicly available 2026 averages from MoneyGeek, Insurify, CarInsurance.com, ValuePenguin, Insure.com, Compare.com, and The Zebra. They are not quotes. Your actual premium will depend on your insurer, ZIP code, vehicle details, full driving history, and other factors.</p>
+    <p style="margin-top:8px">Data sources: Quadrant Information Services · MoneyGeek (March 2026) · Insurify State of Auto Insurance 2026 · CarInsurance.com · ValuePenguin LendingTree · The Zebra · AutoInsurance.com · WalletHub · Jerry.ai · Insure.com</p>
+    <p style="margin-top:8px">&#169; 2026 Fender Rate · Not affiliated with any insurance company · Not a licensed insurance broker or advisor</p>
+  </div>
+</footer>
+
+<!-- D3 + TOPOJSON + CHART.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const BASE=2356;
+const CREDIT_BANNED=['California','Hawaii','Massachusetts','Michigan'];
+const GENDER_BANNED=['California','Hawaii','Massachusetts','Michigan','Montana','North Carolina','Pennsylvania'];
+const VAGE_MULTS=[1.00,0.90,0.86,0.83,0.80,0.78,0.76,0.74,0.72,0.70,0.69,0.68,0.67,0.66,0.65,0.64,0.63,0.62,0.61,0.60,0.59];
+
+const STATE_DATA={
+  'Alabama':{ann:1855,chg:6.7,note:'Rising accident rates and storm claims pushing up premiums.'},
+  'Alaska':{ann:1350,chg:2.9,note:'Low population density and fewer claims offset harsh weather.'},
+  'Arizona':{ann:2230,chg:0.4,note:'High heat stresses vehicles; moderate traffic density.'},
+  'Arkansas':{ann:1680,chg:-4.1,note:'Rates actually fell in 2025 — one of the few states to see a decrease.'},
+  'California':{ann:2967,chg:12.4,note:'Largest YoY increase (+12.4%) in 2025. Credit and gender banned as rating factors.'},
+  'Colorado':{ann:2100,chg:2.9,note:'Hail damage claims and growing urban density drive costs up.'},
+  'Connecticut':{ann:2900,chg:5.5,note:'Dense urban areas, high repair costs, and litigation environment.'},
+  'Delaware':{ann:2530,chg:2.8,note:'Small state with dense traffic corridors to Philadelphia and D.C.'},
+  'Washington D.C.':{ann:3465,chg:3.2,note:'Urban concentration, high crime and theft, expensive repairs.'},
+  'Florida':{ann:3672,chg:-0.5,note:'Most expensive state. High uninsured driver rate (~20%), fraud, hurricane risk.'},
+  'Georgia':{ann:2300,chg:5.2,note:'Atlanta metro driving up costs; growing population density.'},
+  'Hawaii':{ann:1350,chg:1.1,note:'Age, gender, and credit banned as rating factors. Low uninsured rate.'},
+  'Idaho':{ann:1390,chg:1.7,note:'Low density, low theft — one of cheapest states in the West.'},
+  'Illinois':{ann:1900,chg:-7.6,note:'Biggest state decrease in 2025 (-7.6%). Rates dropped notably.'},
+  'Indiana':{ann:1500,chg:4.4,note:'Moderate urban risk; lower litigation costs than neighboring states.'},
+  'Iowa':{ann:1370,chg:0.0,note:'Very stable — no change in 2025. Rural profile dominates.'},
+  'Kansas':{ann:1760,chg:-2.6,note:'Rates fell in 2025. Wide-open roads reduce accident frequency.'},
+  'Kentucky':{ann:2200,chg:5.1,note:'Rising accident rates; severe weather events.'},
+  'Louisiana':{ann:3999,chg:1.5,note:'Second most expensive state. Extreme weather, uninsured drivers, litigation.'},
+  'Maine':{ann:1478,chg:6.3,note:'Rural and low-risk overall, though 2025 saw a notable increase.'},
+  'Maryland':{ann:3300,chg:9.6,note:'Large 2025 increase (+9.6%). Dense D.C. suburb traffic.'},
+  'Massachusetts':{ann:2200,chg:10.6,note:'Age, gender, and credit banned as rating factors. Big 2025 jump.'},
+  'Michigan':{ann:2815,chg:0.3,note:'No-fault reform in 2020 reduced rates significantly; stabilizing now.'},
+  'Minnesota':{ann:1780,chg:1.1,note:'Stable. Cold weather claims offset by low population density.'},
+  'Mississippi':{ann:1850,chg:0.7,note:'Below-average rates despite poverty and storm risk factors.'},
+  'Missouri':{ann:2100,chg:1.3,note:'Near national average; urban/rural mix.'},
+  'Montana':{ann:1550,chg:-1.3,note:'Very low density. Gender banned as a rating factor.'},
+  'Nebraska':{ann:1630,chg:0.5,note:'Stable. Low urban density.'},
+  'Nevada':{ann:3963,chg:8.5,note:'Second most expensive state. Las Vegas tourist traffic, high accident frequency.'},
+  'New Hampshire':{ann:1350,chg:-0.1,note:'No state income tax, low density, low risk.'},
+  'New Jersey':{ann:3200,chg:15.8,note:'Biggest state increase in 2025 (+15.8%), adding ~$383/yr.'},
+  'New Mexico':{ann:1800,chg:0.8,note:'Below-average risk profile; moderate traffic.'},
+  'New York':{ann:3702,chg:3.8,note:'No-fault system, NYC congestion, and expensive repairs. Third priciest state.'},
+  'North Carolina':{ann:1380,chg:-4.8,note:'Among cheapest states; gender banned as rating factor.'},
+  'North Dakota':{ann:1380,chg:0.8,note:'Very low density, minimal claims history.'},
+  'Ohio':{ann:1400,chg:-5.4,note:'Rates fell in 2025. Competitive insurer market.'},
+  'Oklahoma':{ann:2050,chg:1.1,note:'Moderate. Severe weather (tornadoes) adds comprehensive risk.'},
+  'Oregon':{ann:1950,chg:-0.2,note:'Essentially flat in 2025. Credit restricted as a rating factor.'},
+  'Pennsylvania':{ann:2100,chg:-1.0,note:'Gender banned as rating factor. Rates fell slightly in 2025.'},
+  'Rhode Island':{ann:2400,chg:5.5,note:'Small, dense state. High traffic relative to size.'},
+  'South Carolina':{ann:2100,chg:-0.4,note:'Near national average. Slight decrease in 2025.'},
+  'South Dakota':{ann:1450,chg:0.2,note:'Very low density, stable rates.'},
+  'Tennessee':{ann:1680,chg:5.1,note:'Nashville growth driving up accident frequency.'},
+  'Texas':{ann:2400,chg:4.3,note:'Hail risk, traffic density. Large within-state variation ($53+/mo gap Houston vs. Corpus Christi).'},
+  'Utah':{ann:1950,chg:3.7,note:'Growing population and traffic density in Salt Lake corridor.'},
+  'Vermont':{ann:1478,chg:9.8,note:'Cheapest state. Rural, low density, low uninsured rate (5.7%). Saw big 2025 increase despite low base.'},
+  'Virginia':{ann:1700,chg:2.6,note:'Below average. Competitive insurer market.'},
+  'Washington':{ann:2000,chg:11.7,note:'Large 2025 increase (+11.7%). Rising repair costs in Seattle metro.'},
+  'West Virginia':{ann:1600,chg:-2.2,note:'Rural profile, rates fell slightly in 2025.'},
+  'Wisconsin':{ann:1440,chg:1.3,note:'Low density, competitive market. Near-cheapest in Midwest.'},
+  'Wyoming':{ann:1200,chg:1.9,note:'Cheapest state in the Mountain West. Very low density.'},
+};
+
+const EV_DATA=[
+  {make:'Chevrolet',model:'Silverado EV',sub:'Truck (EV)',ann:1947,annMin:993,mo:162,gas:'Chevy Silverado 1500',gasAnn:1340},
+  {make:'Hyundai',model:'Ioniq 5',sub:'SUV (EV)',ann:1962,annMin:1005,mo:164,gas:'Hyundai Tucson',gasAnn:2062},
+  {make:'Subaru',model:'Solterra',sub:'SUV (EV)',ann:1973,annMin:1006,mo:164,gas:'Subaru Forester',gasAnn:2013},
+  {make:'Cadillac',model:'Lyriq',sub:'SUV (EV)',ann:2039,annMin:1040,mo:170,gas:'Cadillac XT5',gasAnn:2200},
+  {make:'Nissan',model:'Leaf',sub:'Hatchback (EV)',ann:2064,annMin:1053,mo:172,gas:'Nissan Sentra',gasAnn:2100},
+  {make:'Volkswagen',model:'ID. Buzz',sub:'Van (EV)',ann:2088,annMin:1065,mo:174,gas:'VW Transporter',gasAnn:1800},
+  {make:'Chevrolet',model:'Equinox EV',sub:'SUV (EV)',ann:2137,annMin:1090,mo:178,gas:'Chevy Equinox',gasAnn:2090},
+  {make:'Chevrolet',model:'Blazer EV',sub:'SUV (EV)',ann:2181,annMin:1112,mo:182,gas:'Chevy Blazer',gasAnn:2100},
+  {make:'Hyundai',model:'Ioniq 6',sub:'Sedan (EV)',ann:2186,annMin:1115,mo:182,gas:'Hyundai Elantra',gasAnn:2150},
+  {make:'Toyota',model:'bZ4X',sub:'SUV (EV)',ann:2197,annMin:1121,mo:183,gas:'Toyota RAV4',gasAnn:2085},
+  {make:'Kia',model:'EV6',sub:'SUV (EV)',ann:2213,annMin:1129,mo:184,gas:'Kia Sportage',gasAnn:2069},
+  {make:'Nissan',model:'Ariya',sub:'SUV (EV)',ann:2243,annMin:1144,mo:187,gas:'Nissan Rogue',gasAnn:2200},
+  {make:'Volkswagen',model:'ID.4',sub:'SUV (EV)',ann:2254,annMin:1150,mo:188,gas:'VW Tiguan',gasAnn:1979},
+  {make:'Kia',model:'EV9',sub:'SUV (EV)',ann:2310,annMin:1178,mo:193,gas:'Kia Telluride',gasAnn:2250},
+  {make:'Ford',model:'Mustang Mach-E',sub:'SUV (EV)',ann:2328,annMin:1188,mo:194,gas:'Ford Edge',gasAnn:2100},
+  {make:'Mini',model:'Cooper Electric',sub:'Hatchback (EV)',ann:2099,annMin:null,mo:175,gas:'Mini Cooper',gasAnn:1254},
+  {make:'BMW',model:'i4',sub:'Sedan (EV)',ann:2512,annMin:1281,mo:209,gas:'BMW 3 Series',gasAnn:2800},
+  {make:'BMW',model:'iX',sub:'SUV (EV)',ann:2591,annMin:1321,mo:216,gas:'BMW X5',gasAnn:3000},
+  {make:'Mercedes-Benz',model:'EQS Sedan',sub:'Sedan (EV)',ann:2643,annMin:1348,mo:220,gas:'Mercedes S-Class',gasAnn:3500},
+  {make:'Genesis',model:'GV60',sub:'SUV (EV)',ann:2716,annMin:1385,mo:226,gas:'Genesis GV70',gasAnn:2500},
+  {make:'Tesla',model:'Cybertruck',sub:'Truck (EV)',ann:2805,annMin:1431,mo:234,gas:'Ford F-150',gasAnn:1280},
+  {make:'Polestar',model:'2',sub:'Sedan (EV)',ann:2878,annMin:1468,mo:240,gas:'Volvo S60',gasAnn:2600},
+  {make:'Ford',model:'F-150 Lightning',sub:'Truck (EV)',ann:3228,annMin:null,mo:269,gas:'Ford F-150',gasAnn:1280},
+  {make:'Rivian',model:'R1S',sub:'SUV (EV)',ann:3008,annMin:1534,mo:251,gas:'Ford Expedition',gasAnn:2600},
+  {make:'Rivian',model:'R1T',sub:'Truck (EV)',ann:3050,annMin:1556,mo:254,gas:'Ford F-150',gasAnn:1280},
+  {make:'Tesla',model:'Model 3',sub:'Sedan (EV)',ann:3268,annMin:1667,mo:272,gas:'BMW 3 Series',gasAnn:2800},
+  {make:'Tesla',model:'Model Y',sub:'SUV (EV)',ann:3343,annMin:1705,mo:279,gas:'Toyota RAV4',gasAnn:2085},
+  {make:'Lucid',model:'Air',sub:'Sedan (EV)',ann:3917,annMin:1998,mo:326,gas:'Mercedes S-Class',gasAnn:3500},
+  {make:'Tesla',model:'Model S',sub:'Sedan (EV)',ann:4347,annMin:2217,mo:362,gas:'Mercedes E-Class',gasAnn:3200},
+  {make:'Tesla',model:'Model X',sub:'SUV (EV)',ann:4469,annMin:2279,mo:372,gas:'BMW X5',gasAnn:3000},
+  {make:'Audi',model:'Q4 e-tron',sub:'SUV (EV)',ann:6285,annMin:3206,mo:524,gas:'Audi Q5',gasAnn:2600},
+  {make:'Audi',model:'Q6 e-tron',sub:'SUV (EV)',ann:7499,annMin:3825,mo:625,gas:'Audi Q6',gasAnn:2800},
+  {make:'Audi',model:'SQ6 e-tron',sub:'SUV (EV)',ann:8503,annMin:4337,mo:709,gas:'Audi SQ5',gasAnn:3200},
+  {make:'Audi',model:'Q8 e-tron',sub:'SUV (EV)',ann:9004,annMin:4592,mo:750,gas:'Audi Q8',gasAnn:3400},
+  {make:'Audi',model:'SQ8 e-tron',sub:'SUV (EV)',ann:10402,annMin:5305,mo:867,gas:'Audi SQ8',gasAnn:3600},
+];
+
+const MODEL_DATA=[
+  {make:'Honda',model:'CR-V',type:'SUV / Crossover',cat:'Budget',ann:1932,mo:161},
+  {make:'Honda',model:'HR-V',type:'SUV / Crossover',cat:'Budget',ann:1936,mo:161},
+  {make:'Volkswagen',model:'Tiguan',type:'SUV / Crossover',cat:'Budget',ann:1979,mo:165},
+  {make:'Hyundai',model:'Venue',type:'SUV / Crossover',cat:'Budget',ann:1999,mo:167},
+  {make:'Chevrolet',model:'TrailBlazer',type:'SUV / Crossover',cat:'Budget',ann:2012,mo:168},
+  {make:'Subaru',model:'Forester',type:'SUV / Crossover',cat:'Budget',ann:2013,mo:168},
+  {make:'Mazda',model:'CX-5',type:'SUV / Crossover',cat:'Budget',ann:2021,mo:168},
+  {make:'Subaru',model:'Outback',type:'SUV / Crossover',cat:'Budget',ann:2042,mo:170},
+  {make:'Hyundai',model:'Kona',type:'SUV / Crossover',cat:'Budget',ann:2048,mo:171},
+  {make:'Hyundai',model:'Tucson',type:'SUV / Crossover',cat:'Budget',ann:2062,mo:172},
+  {make:'Subaru',model:'Crosstrek',type:'SUV / Crossover',cat:'Budget',ann:2064,mo:172},
+  {make:'Toyota',model:'Corolla Cross',type:'SUV / Crossover',cat:'Budget',ann:2066,mo:172},
+  {make:'Kia',model:'Sportage',type:'SUV / Crossover',cat:'Budget',ann:2069,mo:172},
+  {make:'Honda',model:'Pilot',type:'SUV / Crossover',cat:'Budget',ann:2076,mo:173},
+  {make:'Honda',model:'Odyssey',type:'Minivan',cat:'Budget',ann:2080,mo:173},
+  {make:'Toyota',model:'RAV4',type:'SUV / Crossover',cat:'Budget',ann:2085,mo:174},
+  {make:'Mazda',model:'CX-30',type:'SUV / Crossover',cat:'Budget',ann:2086,mo:174},
+  {make:'Chevrolet',model:'Equinox',type:'SUV / Crossover',cat:'Budget',ann:2090,mo:174},
+  {make:'Kia',model:'Seltos',type:'SUV / Crossover',cat:'Budget',ann:2094,mo:174},
+  {make:'Chevrolet',model:'Trax',type:'SUV / Crossover',cat:'Budget',ann:2102,mo:175},
+  {make:'Jeep',model:'Wrangler',type:'SUV / Off-Road',cat:'Budget',ann:2104,mo:175},
+  {make:'Subaru',model:'Impreza',type:'Sedan',cat:'Budget',ann:2120,mo:177},
+  {make:'Ford',model:'Maverick',type:'Truck',cat:'Budget',ann:2118,mo:177},
+  {make:'Ford',model:'Ranger',type:'Truck',cat:'Budget',ann:2156,mo:180},
+  {make:'Honda',model:'Accord',type:'Sedan',cat:'Budget',ann:2342,mo:195},
+  {make:'Toyota',model:'Camry',type:'Sedan',cat:'Budget',ann:2400,mo:200},
+  {make:'Ford',model:'F-150',type:'Truck',cat:'Budget',ann:1536,mo:128},
+  {make:'Chevrolet',model:'Silverado 1500',type:'Truck',cat:'Budget',ann:1344,mo:112},
+  {make:'Toyota',model:'Tacoma',type:'Truck',cat:'Budget',ann:1296,mo:108},
+  {make:'Toyota',model:'Sienna',type:'Minivan',cat:'Budget',ann:1332,mo:111},
+  {make:'Toyota',model:'Highlander',type:'SUV / Crossover',cat:'Budget',ann:1320,mo:110},
+  {make:'Toyota',model:'Prius',type:'Hybrid',cat:'Mainstream',ann:2230,mo:186},
+  {make:'Ford',model:'Explorer',type:'SUV / Crossover',cat:'Mainstream',ann:2100,mo:175},
+  {make:'Chevrolet',model:'Tahoe',type:'SUV / Full-Size',cat:'Mainstream',ann:2200,mo:183},
+  {make:'Nissan',model:'Altima',type:'Sedan',cat:'Mainstream',ann:2380,mo:198},
+  {make:'Ford',model:'Mustang',type:'Coupe',cat:'Mainstream',ann:2496,mo:208},
+  {make:'Dodge',model:'Challenger',type:'Coupe',cat:'Mainstream',ann:3695,mo:308},
+  {make:'Volvo',model:'XC40',type:'SUV / Crossover',cat:'Mainstream',ann:2324,mo:194},
+  {make:'Mazda',model:'CX-90',type:'SUV / Crossover',cat:'Mainstream',ann:2161,mo:180},
+  {make:'Infiniti',model:'Q50',type:'Sedan / Luxury',cat:'Luxury',ann:2736,mo:228},
+  {make:'Lexus',model:'CT',type:'Hatchback / Luxury',cat:'Luxury',ann:3735,mo:311},
+  {make:'Lexus',model:'RC-F',type:'Coupe / Luxury',cat:'Luxury',ann:8486,mo:707},
+  {make:'BMW',model:'330i',type:'Sedan / Luxury',cat:'Luxury',ann:3287,mo:274},
+  {make:'BMW',model:'M8 Gran Coupe',type:'Coupe / Luxury',cat:'Performance',ann:6744,mo:562},
+  {make:'BMW',model:'M5',type:'Sedan / Performance',cat:'Performance',ann:6593,mo:549},
+  {make:'BMW',model:'M5 Touring',type:'Wagon / Performance',cat:'Performance',ann:6708,mo:559},
+  {make:'BMW',model:'M8',type:'Coupe / Performance',cat:'Performance',ann:6423,mo:535},
+  {make:'Mercedes-Benz',model:'GLC',type:'SUV / Luxury',cat:'Luxury',ann:4872,mo:406},
+  {make:'Mercedes-Benz',model:'GLE',type:'SUV / Luxury',cat:'Luxury',ann:5040,mo:420},
+  {make:'Mercedes-Benz',model:'C63 AMG',type:'Sedan / Performance',cat:'Performance',ann:9215,mo:768},
+  {make:'Mercedes-Benz',model:'E63 AMG',type:'Sedan / Performance',cat:'Performance',ann:10508,mo:876},
+  {make:'Audi',model:'RS Q8',type:'SUV / Performance',cat:'Performance',ann:4998,mo:417},
+  {make:'Maserati',model:'Quattroporte',type:'Sedan',cat:'Ultra-Luxury',ann:7090,mo:591},
+  {make:'Maserati',model:'Ghibli',type:'Sedan',cat:'Ultra-Luxury',ann:6384,mo:532},
+  {make:'Genesis',model:'G90',type:'Sedan / Luxury',cat:'Luxury',ann:4927,mo:411},
+  {make:'Cadillac',model:'Escalade',type:'SUV / Full-Size',cat:'Luxury',ann:3711,mo:309},
+  {make:'Chevrolet',model:'Equinox EV',type:'SUV (EV)',cat:'EV',ann:2712,mo:226},
+  {make:'Ford',model:'F-150 Lightning',type:'Truck (EV)',cat:'EV',ann:3228,mo:269},
+  {make:'Tesla',model:'Model 3',type:'Sedan (EV)',cat:'EV',ann:3268,mo:272},
+  {make:'Tesla',model:'Model Y',type:'SUV (EV)',cat:'EV',ann:3343,mo:279},
+  {make:'Tesla',model:'Model S',type:'Sedan (EV)',cat:'EV',ann:4347,mo:362},
+  {make:'Tesla',model:'Model X',type:'SUV (EV)',cat:'EV',ann:4469,mo:372},
+  {make:'Rivian',model:'R1S',type:'SUV (EV)',cat:'EV',ann:5724,mo:477},
+  {make:'Rivian',model:'R1T',type:'Truck (EV)',cat:'EV',ann:3660,mo:305},
+  {make:'Hyundai',model:'Ioniq 5',type:'SUV (EV)',cat:'EV',ann:1962,mo:164},
+  {make:'Kia',model:'EV6',type:'SUV (EV)',cat:'EV',ann:2213,mo:184},
+  {make:'Audi',model:'Q8 e-tron',type:'SUV (EV)',cat:'EV',ann:9004,mo:750},
+  {make:'Lucid',model:'Air',type:'Sedan (EV)',cat:'EV',ann:3917,mo:326},
+];
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function fmt(n){if(n==null)return'—';return'$'+Math.round(n).toLocaleString();}
+function fmtPct(p){return(p>=0?'+':'')+Math.round(p)+'%';}
+function vageMult(yr){return VAGE_MULTS[Math.min(yr,VAGE_MULTS.length-1)];}
+function isTeen(m){return m>=2.45;}
+
+// ─── TAB NAVIGATION ──────────────────────────────────────────────────────────
+function showTab(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const tabs={estimator:0,map:1,ev:2,models:3,submit:4};
+  document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+  if(id==='map'&&!mapBuilt)buildMap();
+  if(id==='ev'&&!evBuilt)buildEV();
+  if(id==='models'&&!modelsBuilt)buildModels();
+}
+
+// ─── ESTIMATOR ───────────────────────────────────────────────────────────────
+let currentMode='single';
+function setMode(m){
+  currentMode=m;
+  document.getElementById('btn-single').className='mode-btn'+(m==='single'?' active':'');
+  document.getElementById('btn-household').className='mode-btn'+(m==='household'?' active':'');
+  document.getElementById('d1-label').style.display=m==='household'?'block':'none';
+  document.getElementById('d2-block').style.display=m==='household'?'block':'none';
+  document.getElementById('single-card').style.display=m==='single'?'block':'none';
+  document.getElementById('hh-card').style.display=m==='household'?'block':'none';
+  document.getElementById('single-factors').style.display=m==='single'?'block':'none';
+  calc();
+}
+
+function calcDriver(stateBase,ageMult,gMult,recMult,crMult,marMult,covMult,vehMult,vageYr){
+  return stateBase*ageMult*gMult*recMult*crMult*marMult*covMult*vehMult*vageMult(vageYr);
+}
+
+function calc(){
+  const stateEl=document.getElementById('s-state');
+  const stateBase=parseFloat(stateEl.value);
+  const stateName=stateEl.options[stateEl.selectedIndex].text;
+  const crBan=CREDIT_BANNED.includes(stateName);
+  const gBan=GENDER_BANNED.includes(stateName);
+
+  document.getElementById('cr-note').textContent=crBan?'banned in '+stateName:'';
+  document.getElementById('g1-note').textContent=gBan?'not rated in '+stateName:'';
+  document.getElementById('cr-field').className='field'+(crBan?' disabled-block':'');
+  document.getElementById('g1-field').className='field'+(gBan?' disabled-block':'');
+  if(document.getElementById('g2-note'))document.getElementById('g2-note').textContent=gBan?'not rated in '+stateName:'';
+
+  const ageMult=parseFloat(document.getElementById('s-age').value);
+  const teen=isTeen(ageMult);
+  const gOpt=document.getElementById('s-gender').options[document.getElementById('s-gender').selectedIndex];
+  const gMult=gBan?1.0:(teen?parseFloat(gOpt.dataset.teen||gOpt.value):parseFloat(gOpt.value));
+  const recMult=parseFloat(document.getElementById('s-record').value);
+  const crMult=crBan?1.0:parseFloat(document.getElementById('s-credit').value);
+  const marRaw=parseFloat(document.getElementById('s-marital').value);
+  const marMult=1.0+(marRaw-1.0)*(teen?1.5:1.0);
+  const covMult=parseFloat(document.getElementById('s-coverage').value);
+  const vehMult=parseFloat(document.getElementById('s-vehicle').value);
+  const vageYr=parseInt(document.getElementById('s-vage').value);
+
+  const vageLabel=vageYr===0?'New':vageYr+(vageYr===1?' yr':' yrs');
+  document.getElementById('vage-out').textContent=vageLabel;
+  const pctNew=Math.round((vageMult(vageYr)-1)*100);
+  const hintEl=document.getElementById('vage-hint');
+  if(vageYr===0)hintEl.textContent='Brand new — highest replacement value';
+  else if(vageYr<=2)hintEl.textContent=Math.abs(pctNew)+'% cheaper than new after first year of depreciation';
+  else if(vageYr<=5)hintEl.textContent=Math.abs(pctNew)+'% cheaper than new — savings really start here';
+  else if(vageYr<=10)hintEl.textContent=Math.abs(pctNew)+'% cheaper than new — worth reviewing your coverage level';
+  else hintEl.textContent=Math.abs(pctNew)+'% cheaper than new — consider whether full coverage still makes sense';
+
+  const tipEl=document.getElementById('drop-tip');
+  if(covMult>0.31&&vageYr>=10){
+    tipEl.style.display='block';
+    tipEl.textContent=vageYr>=15?'At '+vageYr+' years old, liability-only could save significantly — compare annual comp/collision cost to your car\'s market value.':'10x rule: if car value < 10× annual collision premium, dropping full coverage saves more than it risks.';
+  }else{tipEl.style.display='none';}
+
+  drawCurve(vageYr);
+
+  const ann1=calcDriver(stateBase,ageMult,gMult,recMult,crMult,marMult,covMult,vehMult,vageYr);
+
+  if(currentMode==='single'){
+    const mo1=ann1/12;
+    document.getElementById('r-annual').textContent=fmt(ann1);
+    document.getElementById('r-mo').textContent=fmt(mo1)+'/mo';
+    const barPct=Math.min(100,Math.max(2,((ann1-800)/(15000-800))*100));
+    const barColor=ann1<2000?'#16A34A':ann1<3000?'#D97706':'#DC2626';
+    document.getElementById('r-annual').style.color=barColor;
+    const bf=document.getElementById('r-bar');
+    bf.style.width=barPct+'%';bf.style.background=barColor;
+    const vsPct=(ann1/BASE-1)*100;
+    const vb=document.getElementById('r-vs');
+    vb.textContent=fmtPct(vsPct)+' vs. natl avg';
+    vb.className='badge '+(vsPct<=0?'badge-green':'badge-red');
+    const tier=ann1<1500?'Very low':ann1<2200?'Below average':ann1<2800?'Near average':ann1<4000?'Above average':'High cost';
+    document.getElementById('r-tier').textContent=tier;
+
+    const factors=[
+      {l:'State / location',p:Math.round((stateBase/BASE-1)*100)},
+      {l:'Age group',p:Math.round((ageMult-1)*100)},
+      ...(!gBan&&gMult!==1?[{l:'Gender',p:Math.round((gMult-1)*100)}]:[]),
+      {l:'Driving record',p:Math.round((recMult-1)*100)},
+      ...(!crBan?[{l:'Credit tier',p:Math.round((crMult-1)*100)}]:[]),
+      {l:'Marital status',p:Math.round((marMult-1)*100)},
+      {l:'Vehicle type',p:Math.round((vehMult-1)*100)},
+      {l:'Vehicle age',p:Math.round((vageMult(vageYr)-1)*100)},
+    ];
+    document.getElementById('r-factors').innerHTML=factors.map(f=>{
+      const col=f.p>25?'#DC2626':f.p>8?'#D97706':f.p<-5?'#16A34A':'var(--muted)';
+      const bw=Math.min(100,Math.abs(f.p)*1.1);
+      const bc=f.p>0?(f.p>25?'#DC2626':'#D97706'):'#16A34A';
+      return`<div class="factor-row"><span style="font-size:12px;color:var(--muted)">${f.l}</span><span style="font-size:12px;font-weight:600;color:${col}">${fmtPct(f.p)}</span></div><div class="mini-track"><div class="mini-fill" style="width:${bw}%;background:${bc}"></div></div>`;
+    }).join('');
+  }
+
+  if(currentMode==='household'){
+    const ageMult2=parseFloat(document.getElementById('s-age2').value);
+    const teen2=isTeen(ageMult2);
+    const g2Opt=document.getElementById('s-gender2').options[document.getElementById('s-gender2').selectedIndex];
+    const gMult2=gBan?1.0:(teen2?parseFloat(g2Opt.dataset.teen||g2Opt.value):parseFloat(g2Opt.value));
+    const rec2=parseFloat(document.getElementById('s-record2').value);
+    const cov2=parseFloat(document.getElementById('s-coverage2').value);
+    const veh2=parseFloat(document.getElementById('s-vehicle2').value);
+    const vage2=parseInt(document.getElementById('s-vage2').value);
+    document.getElementById('vage2-out').textContent=vage2===0?'New':vage2+(vage2===1?' yr':' yrs');
+    const ann2=calcDriver(stateBase,ageMult2,gMult2,rec2,crMult,0.95,cov2,veh2,vage2);
+    const disc=parseFloat(document.getElementById('s-multicar').value);
+    const discPct=Math.round((1-disc)*100);
+    const sub=ann1+ann2;const combined=sub*disc;const savings=sub-combined;
+    document.getElementById('hh-v1').textContent=fmt(ann1)+'/yr';
+    document.getElementById('hh-v2').textContent=fmt(ann2)+'/yr';
+    document.getElementById('hh-sub').textContent=fmt(sub)+'/yr';
+    document.getElementById('hh-disc-label').textContent='Multi-car discount ('+discPct+'%)';
+    document.getElementById('hh-disc').textContent='−'+fmt(savings);
+    document.getElementById('hh-total').textContent=fmt(combined);
+    document.getElementById('hh-total-mo').textContent=fmt(combined/12)+'/mo';
+    document.getElementById('hh-savings-badge').textContent='Saves '+fmt(savings)+'/yr vs. separate policies';
+  }
+
+  const covBase=ann1/covMult;
+  const covMap={'Minimum / Liability only':0.31,'Full coverage':1.00,'Full + low deductible':1.15};
+  document.getElementById('cov-title').textContent=currentMode==='household'?'Coverage comparison (vehicle 1)':'Coverage comparison';
+  document.getElementById('r-coverage').innerHTML=Object.entries(covMap).map(([lbl,mult])=>{
+    const a=covBase*mult;const active=Math.abs(mult-covMult)<0.001;
+    return`<div class="cov-row${active?' active':''}" onclick="document.getElementById('s-coverage').value='${mult}';calc()"><span class="cov-label">${lbl}</span><span class="cov-price">${fmt(a)}/yr</span></div>`;
+  }).join('');
+}
+
+function drawCurve(yr1){
+  const el=document.getElementById('age-curve');
+  const W=el.offsetWidth||360,H=72;
+  const pts=VAGE_MULTS.map((m,i)=>{const x=(i/20)*(W-20)+10;const y=H-8-(m-0.55)/(1-0.55)*(H-20);return[x,y];});
+  const pathD=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const cx=pts[yr1][0],cy=pts[yr1][1];
+  const pct=Math.round((vageMult(yr1)-1)*100);
+  const lbl=pct===0?'New car baseline':(Math.abs(pct)+'% cheaper than new');
+  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <path d="${pathD}" fill="none" stroke="#E8521A" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="#E8521A"/>
+    <text x="${Math.min(cx+9,W-80).toFixed(1)}" y="${Math.max(cy-7,12).toFixed(1)}" font-size="11" fill="#1A1A1A" font-family="'DM Sans',sans-serif">${lbl}</text>
+    <text x="10" y="${H-1}" font-size="9" fill="#9CA3AF" font-family="'DM Sans',sans-serif">New</text>
+    <text x="${W-26}" y="${H-1}" font-size="9" fill="#9CA3AF" font-family="'DM Sans',sans-serif">20 yrs</text>
+  </svg>`;
+}
+
+// ─── STATE MAP ────────────────────────────────────────────────────────────────
+let mapBuilt=false;
+function buildMap(){
+  mapBuilt=true;
+  const container=document.getElementById('map-container');
+  const W=container.offsetWidth||800;const H=Math.round(W*0.62);
+  const svg=d3.select('#map-container').append('svg').attr('id','map-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%');
+  const projection=d3.geoAlbersUsa().scale(W*1.25).translate([W/2,H/2]);
+  const path=d3.geoPath(projection);
+  const rates=Object.fromEntries(Object.entries(STATE_DATA).map(([k,v])=>[k,v.ann]));
+  const vals=Object.values(rates);const mn=Math.min(...vals),mx=Math.max(...vals);
+  function stateColor(ann){
+    const t=(ann-mn)/(mx-mn);
+    if(t<0.25)return'#C6EFCE';if(t<0.50)return'#FFEB9C';if(t<0.75)return'#FCE4D6';return'#FFC7CE';
+  }
+  const tooltip=document.getElementById('map-tooltip');
+  d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us=>{
+    const stateNames={};
+    // use FIPS numeric IDs from the TopoJSON
+    const stateIdToName={1:'Alabama',2:'Alaska',4:'Arizona',5:'Arkansas',6:'California',8:'Colorado',9:'Connecticut',10:'Delaware',11:'Washington D.C.',12:'Florida',13:'Georgia',15:'Hawaii',16:'Idaho',17:'Illinois',18:'Indiana',19:'Iowa',20:'Kansas',21:'Kentucky',22:'Louisiana',23:'Maine',24:'Maryland',25:'Massachusetts',26:'Michigan',27:'Minnesota',28:'Mississippi',29:'Missouri',30:'Montana',31:'Nebraska',32:'Nevada',33:'New Hampshire',34:'New Jersey',35:'New Mexico',36:'New York',37:'North Carolina',38:'North Dakota',39:'Ohio',40:'Oklahoma',41:'Oregon',42:'Pennsylvania',44:'Rhode Island',45:'South Carolina',46:'South Dakota',47:'Tennessee',48:'Texas',49:'Utah',50:'Vermont',51:'Virginia',53:'Washington',54:'West Virginia',55:'Wisconsin',56:'Wyoming'};
+    svg.selectAll('path')
+      .data(topojson.feature(us,us.objects.states).features)
+      .join('path')
+      .attr('d',path)
+      .attr('stroke','#fff')
+      .attr('stroke-width','0.5')
+      .attr('fill',d=>{
+        const name=stateIdToName[parseInt(d.id)];
+        return name&&STATE_DATA[name]?stateColor(STATE_DATA[name].ann):'#E2E0DC';
+      })
+      .on('mousemove',(event,d)=>{
+        const name=stateIdToName[parseInt(d.id)];
+        if(!name||!STATE_DATA[name])return;
+        const sd=STATE_DATA[name];
+        const chgSign=sd.chg>=0?'+':'';
+        tooltip.style.display='block';
+        tooltip.style.left=(event.clientX+12)+'px';
+        tooltip.style.top=(event.clientY-10)+'px';
+        tooltip.innerHTML=`<strong>${name}</strong><br>${fmt(sd.ann)}/yr &nbsp;·&nbsp; ${fmt(sd.ann/12)}/mo<br>2025 change: ${chgSign}${sd.chg}%`;
+      })
+      .on('mouseleave',()=>{tooltip.style.display='none';})
+      .on('click',(event,d)=>{
+        const name=stateIdToName[parseInt(d.id)];
+        if(!name||!STATE_DATA[name])return;
+        showStateDetail(name);
+      });
+  });
+}
+
+function showStateDetail(name){
+  const sd=STATE_DATA[name];if(!sd)return;
+  document.getElementById('state-detail').style.display='block';
+  document.getElementById('sd-state-name').textContent=name;
+  document.getElementById('sd-ann').textContent=fmt(sd.ann)+'/yr';
+  document.getElementById('sd-mo').textContent=fmt(sd.ann/12)+'/mo';
+  const chgEl=document.getElementById('sd-chg');
+  chgEl.textContent=(sd.chg>=0?'+':'')+sd.chg+'%';
+  chgEl.style.color=sd.chg>5?'#DC2626':sd.chg<0?'#16A34A':'#D97706';
+  document.getElementById('sd-note').textContent=sd.note;
+  document.getElementById('state-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ─── EV vs GAS ────────────────────────────────────────────────────────────────
+let evBuilt=false,evSort={col:'ann',dir:1},evFilter='all';
+function buildEV(){
+  evBuilt=true;
+  const ctx=document.getElementById('ev-chart');
+  const tiers=['Budget (<$2,200)','Mid ($2,200–$3,200)','Premium ($3,200–$5,000)','Ultra ($5,000+)'];
+  const avgs=[
+    Math.round(EV_DATA.filter(d=>d.ann<2200).reduce((s,d)=>s+d.ann,0)/EV_DATA.filter(d=>d.ann<2200).length),
+    Math.round(EV_DATA.filter(d=>d.ann>=2200&&d.ann<3200).reduce((s,d)=>s+d.ann,0)/EV_DATA.filter(d=>d.ann>=2200&&d.ann<3200).length),
+    Math.round(EV_DATA.filter(d=>d.ann>=3200&&d.ann<5000).reduce((s,d)=>s+d.ann,0)/EV_DATA.filter(d=>d.ann>=3200&&d.ann<5000).length),
+    Math.round(EV_DATA.filter(d=>d.ann>=5000).reduce((s,d)=>s+d.ann,0)/EV_DATA.filter(d=>d.ann>=5000).length),
+  ];
+  new Chart(ctx,{type:'bar',data:{labels:tiers,datasets:[{label:'Avg annual premium',data:avgs,backgroundColor:['#86EFAC','#FDE68A','#FDBA74','#FCA5A5'],borderColor:['#16A34A','#D97706','#EA580C','#DC2626'],borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.raw.toLocaleString()+'/yr'}}},scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},beginAtZero:false,min:1500}}}});
+  renderEVTable();
+}
+function filterEV(f,btn){
+  evFilter=f;
+  document.querySelectorAll('#ev-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEVTable();
+}
+function sortEV(col){
+  if(evSort.col===col)evSort.dir*=-1;else{evSort.col=col;evSort.dir=1;}
+  renderEVTable();
+}
+function evTier(ann){
+  if(ann<2200)return{label:'Budget',cls:'pill-green'};
+  if(ann<3200)return{label:'Mid',cls:'pill-amber'};
+  if(ann<5000)return{label:'Premium',cls:'pill-red'};
+  return{label:'Ultra',cls:'pill-red'};
+}
+function renderEVTable(){
+  let data=[...EV_DATA];
+  if(evFilter==='budget')data=data.filter(d=>d.ann<2200);
+  else if(evFilter==='mid')data=data.filter(d=>d.ann>=2200&&d.ann<3200);
+  else if(evFilter==='premium')data=data.filter(d=>d.ann>=3200);
+  const col=evSort.col;
+  data.sort((a,b)=>{
+    const av=col==='make'?a.make+a.model:col==='subtype'?a.sub:col==='mo'?a.mo:col==='gap'?(a.gasAnn?(a.ann-a.gasAnn)/a.gasAnn:0):a.ann;
+    const bv=col==='make'?b.make+b.model:col==='subtype'?b.sub:col==='mo'?b.mo:col==='gap'?(b.gasAnn?(b.ann-b.gasAnn)/b.gasAnn:0):b.ann;
+    return typeof av==='string'?av.localeCompare(bv)*evSort.dir:(av-bv)*evSort.dir;
+  });
+  const tbody=document.getElementById('ev-tbody');
+  tbody.innerHTML=data.map(d=>{
+    const gap=d.gasAnn?Math.round((d.ann-d.gasAnn)/d.gasAnn*100):null;
+    const gapCell=gap!=null?`<span class="pill ${gap<0?'pill-green':gap<20?'pill-amber':'pill-red'}">${gap>=0?'+':''}${gap}%</span>`:'—';
+    const tier=evTier(d.ann);
+    return`<tr><td><strong>${d.make}</strong> ${d.model}</td><td style="color:var(--muted)">${d.sub}</td><td><strong>${fmt(d.ann)}</strong></td><td>${fmt(d.mo)}/mo</td><td style="font-size:12px;color:var(--muted)">${d.gas||'—'}<br><span style="font-size:11px">${d.gasAnn?fmt(d.gasAnn)+'/yr':''}</span></td><td>${gapCell}</td><td><span class="pill ${tier.cls}">${tier.label}</span></td></tr>`;
+  }).join('');
+}
+
+// ─── MODEL LOOKUP ─────────────────────────────────────────────────────────────
+let modelsBuilt=false,modelSort={col:'ann',dir:1},modelCatFilter='All';
+function buildModels(){modelsBuilt=true;renderModels();}
+function filterModelCat(cat,btn){
+  modelCatFilter=cat;
+  document.querySelectorAll('#model-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderModels();
+}
+function sortModels(col){
+  if(modelSort.col===col)modelSort.dir*=-1;else{modelSort.col=col;modelSort.dir=1;}
+  renderModels();
+}
+function filterModels(){renderModels();}
+function catPill(cat){
+  const map={Budget:'pill-green',Mainstream:'pill-blue',Luxury:'pill-amber',Performance:'pill-red','Ultra-Luxury':'pill-red',EV:'pill-blue'};
+  return`<span class="pill ${map[cat]||'pill-gray'}">${cat}</span>`;
+}
+function renderModels(){
+  const q=document.getElementById('model-search').value.toLowerCase();
+  let data=MODEL_DATA.filter(d=>{
+    const matchQ=!q||d.make.toLowerCase().includes(q)||d.model.toLowerCase().includes(q)||d.type.toLowerCase().includes(q);
+    const matchCat=modelCatFilter==='All'||d.cat===modelCatFilter;
+    return matchQ&&matchCat;
+  });
+  const col=modelSort.col;
+  data.sort((a,b)=>{
+    const av=col==='make'?a.make:col==='model'?a.model:col==='mo'?a.mo:a.ann;
+    const bv=col==='make'?b.make:col==='model'?b.model:col==='mo'?b.mo:b.ann;
+    return typeof av==='string'?av.localeCompare(bv)*modelSort.dir:(av-bv)*modelSort.dir;
+  });
+  const vsPct=ann=>ann?Math.round((ann/BASE-1)*100):null;
+  document.getElementById('model-tbody').innerHTML=data.map(d=>{
+    const vp=vsPct(d.ann);
+    const vpCell=vp!=null?`<span class="pill ${vp<=-10?'pill-green':vp>=10?'pill-red':'pill-amber'}">${vp>=0?'+':''}${vp}%</span>`:'—';
+    return`<tr><td><strong>${d.make}</strong></td><td>${d.model}</td><td style="font-size:12px;color:var(--muted)">${d.type}</td><td>${catPill(d.cat)}</td><td>${d.ann?'<strong>'+fmt(d.ann)+'</strong>':'—'}</td><td>${d.mo?fmt(d.mo)+'/mo':'—'}</td><td>${vpCell}</td></tr>`;
+  }).join('');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+calc();
+</script>
+</body>
+</html>
