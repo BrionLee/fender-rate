@@ -423,7 +423,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:24px
   <div class="grid-3" style="margin-bottom:24px">
     <div class="stat-card"><div class="stat-label">Cheapest EV to insure</div><div class="stat-value" style="color:var(--green)">Chevy Silverado EV</div><div class="stat-sub">$1,947/yr — cheaper than many gas SUVs</div></div>
     <div class="stat-card"><div class="stat-label">Most expensive EV</div><div class="stat-value" style="color:var(--red)">Audi SQ8 e-tron</div><div class="stat-sub">$10,402/yr</div></div>
-    <div class="stat-card"><div class="stat-label">EV premium gap (2026)</div><div class="stat-value" style="color:var(--amber)">+18%</div><div class="stat-sub">vs. gas avg — down from +23% in 2025</div></div>
+    <div class="stat-card"><div class="stat-label">EV premium gap (2026)</div><div class="stat-value" style="color:var(--amber)">+18%</div><div class="stat-sub">vs. gas avg, for 2024+ model year EVs</div></div>
   </div>
 
   <div class="card" style="margin-bottom:20px">
@@ -561,7 +561,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:24px
 // ─── DATA ────────────────────────────────────────────────────────────────────
 const BASE=2356;
 const CREDIT_BANNED=['California','Hawaii','Massachusetts','Michigan'];
-const GENDER_BANNED=['California','Hawaii','Massachusetts','Michigan','Montana','North Carolina','Pennsylvania'];
+const GENDER_BANNED=['California','Hawaii','Massachusetts','Michigan','North Carolina','Pennsylvania'];
 const VAGE_MULTS=[1.00,0.90,0.86,0.83,0.80,0.78,0.76,0.74,0.72,0.70,0.69,0.68,0.67,0.66,0.65,0.64,0.63,0.62,0.61,0.60,0.59];
 
 const STATE_DATA={
@@ -591,7 +591,7 @@ const STATE_DATA={
   'Minnesota':{ann:1780,chg:1.1,note:'Stable. Cold weather claims offset by low population density.'},
   'Mississippi':{ann:1850,chg:0.7,note:'Below-average rates despite poverty and storm risk factors.'},
   'Missouri':{ann:2100,chg:1.3,note:'Near national average; urban/rural mix.'},
-  'Montana':{ann:1550,chg:-1.3,note:'Very low density. Gender banned as a rating factor.'},
+  'Montana':{ann:1550,chg:-1.3,note:'Very low density. Gender rating ban was repealed in 2021.'},
   'Nebraska':{ann:1630,chg:0.5,note:'Stable. Low urban density.'},
   'Nevada':{ann:3963,chg:8.5,note:'Second most expensive state. Las Vegas tourist traffic, high accident frequency.'},
   'New Hampshire':{ann:1350,chg:-0.1,note:'No state income tax, low density, low risk.'},
@@ -639,11 +639,11 @@ const EV_DATA=[
   {make:'BMW',model:'iX',sub:'SUV (EV)',ann:2591,annMin:1321,mo:216,gas:'BMW X5',gasAnn:3000},
   {make:'Mercedes-Benz',model:'EQS Sedan',sub:'Sedan (EV)',ann:2643,annMin:1348,mo:220,gas:'Mercedes S-Class',gasAnn:3500},
   {make:'Genesis',model:'GV60',sub:'SUV (EV)',ann:2716,annMin:1385,mo:226,gas:'Genesis GV70',gasAnn:2500},
-  {make:'Tesla',model:'Cybertruck',sub:'Truck (EV)',ann:2805,annMin:1431,mo:234,gas:'Ford F-150',gasAnn:1280},
+  {make:'Tesla',model:'Cybertruck',sub:'Truck (EV)',ann:2805,annMin:1431,mo:234,gas:'Ford F-150',gasAnn:1536},
   {make:'Polestar',model:'2',sub:'Sedan (EV)',ann:2878,annMin:1468,mo:240,gas:'Volvo S60',gasAnn:2600},
-  {make:'Ford',model:'F-150 Lightning',sub:'Truck (EV)',ann:3228,annMin:null,mo:269,gas:'Ford F-150',gasAnn:1280},
+  {make:'Ford',model:'F-150 Lightning',sub:'Truck (EV)',ann:3228,annMin:null,mo:269,gas:'Ford F-150',gasAnn:1536},
   {make:'Rivian',model:'R1S',sub:'SUV (EV)',ann:3008,annMin:1534,mo:251,gas:'Ford Expedition',gasAnn:2600},
-  {make:'Rivian',model:'R1T',sub:'Truck (EV)',ann:3050,annMin:1556,mo:254,gas:'Ford F-150',gasAnn:1280},
+  {make:'Rivian',model:'R1T',sub:'Truck (EV)',ann:3050,annMin:1556,mo:254,gas:'Ford F-150',gasAnn:1536},
   {make:'Tesla',model:'Model 3',sub:'Sedan (EV)',ann:3268,annMin:1667,mo:272,gas:'BMW 3 Series',gasAnn:2800},
   {make:'Tesla',model:'Model Y',sub:'SUV (EV)',ann:3343,annMin:1705,mo:279,gas:'Toyota RAV4',gasAnn:2085},
   {make:'Lucid',model:'Air',sub:'Sedan (EV)',ann:3917,annMin:1998,mo:326,gas:'Mercedes S-Class',gasAnn:3500},
