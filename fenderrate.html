@@ -469,8 +469,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:24px
 
   <div class="filter-row" id="model-filters">
     <button class="filter-btn active" onclick="filterModelCat('All',this)">All</button>
-    <button class="filter-btn" onclick="filterModelCat('Everyday',this)">Everyday</button>
-    <button class="filter-btn" onclick="filterModelCat('Specialty',this)">Specialty</button>
+    <button class="filter-btn" onclick="filterModelCat('Mainstream',this)">Mainstream</button>
     <button class="filter-btn" onclick="filterModelCat('Luxury',this)">Luxury</button>
     <button class="filter-btn" onclick="filterModelCat('Performance',this)">Performance</button>
     <button class="filter-btn" onclick="filterModelCat('EV',this)">EV</button>
@@ -657,45 +656,45 @@ const EV_DATA=[
 ];
 
 const MODEL_DATA=[
-  {make:'Honda',model:'CR-V',type:'SUV / Crossover',cat:'Everyday',ann:1932,mo:161},
-  {make:'Honda',model:'HR-V',type:'SUV / Crossover',cat:'Everyday',ann:1936,mo:161},
-  {make:'Volkswagen',model:'Tiguan',type:'SUV / Crossover',cat:'Everyday',ann:1979,mo:165},
-  {make:'Hyundai',model:'Venue',type:'SUV / Crossover',cat:'Everyday',ann:1999,mo:167},
-  {make:'Chevrolet',model:'TrailBlazer',type:'SUV / Crossover',cat:'Everyday',ann:2012,mo:168},
-  {make:'Subaru',model:'Forester',type:'SUV / Crossover',cat:'Everyday',ann:2013,mo:168},
-  {make:'Mazda',model:'CX-5',type:'SUV / Crossover',cat:'Everyday',ann:2021,mo:168},
-  {make:'Subaru',model:'Outback',type:'SUV / Crossover',cat:'Everyday',ann:2042,mo:170},
-  {make:'Hyundai',model:'Kona',type:'SUV / Crossover',cat:'Everyday',ann:2048,mo:171},
-  {make:'Hyundai',model:'Tucson',type:'SUV / Crossover',cat:'Everyday',ann:2062,mo:172},
-  {make:'Subaru',model:'Crosstrek',type:'SUV / Crossover',cat:'Everyday',ann:2064,mo:172},
-  {make:'Toyota',model:'Corolla Cross',type:'SUV / Crossover',cat:'Everyday',ann:2066,mo:172},
-  {make:'Kia',model:'Sportage',type:'SUV / Crossover',cat:'Everyday',ann:2069,mo:172},
-  {make:'Honda',model:'Pilot',type:'SUV / Crossover',cat:'Everyday',ann:2076,mo:173},
-  {make:'Honda',model:'Odyssey',type:'Minivan',cat:'Everyday',ann:2080,mo:173},
-  {make:'Toyota',model:'RAV4',type:'SUV / Crossover',cat:'Everyday',ann:2085,mo:174},
-  {make:'Mazda',model:'CX-30',type:'SUV / Crossover',cat:'Everyday',ann:2086,mo:174},
-  {make:'Chevrolet',model:'Equinox',type:'SUV / Crossover',cat:'Everyday',ann:2090,mo:174},
-  {make:'Kia',model:'Seltos',type:'SUV / Crossover',cat:'Everyday',ann:2094,mo:174},
-  {make:'Chevrolet',model:'Trax',type:'SUV / Crossover',cat:'Everyday',ann:2102,mo:175},
-  {make:'Jeep',model:'Wrangler',type:'SUV / Off-Road',cat:'Everyday',ann:2104,mo:175},
-  {make:'Subaru',model:'Impreza',type:'Sedan',cat:'Everyday',ann:2120,mo:177},
-  {make:'Ford',model:'Maverick',type:'Truck',cat:'Everyday',ann:2118,mo:177},
-  {make:'Ford',model:'Ranger',type:'Truck',cat:'Everyday',ann:2156,mo:180},
-  {make:'Honda',model:'Accord',type:'Sedan',cat:'Everyday',ann:2342,mo:195},
-  {make:'Toyota',model:'Camry',type:'Sedan',cat:'Everyday',ann:2400,mo:200},
-  {make:'Ford',model:'F-150',type:'Truck',cat:'Everyday',ann:1862,mo:155},
-  {make:'Chevrolet',model:'Silverado 1500',type:'Truck',cat:'Everyday',ann:1899,mo:158},
-  {make:'Toyota',model:'Tacoma',type:'Truck',cat:'Everyday',ann:2050,mo:171},
-  {make:'Toyota',model:'Sienna',type:'Minivan',cat:'Everyday',ann:2083,mo:174},
-  {make:'Toyota',model:'Highlander',type:'SUV / Crossover',cat:'Everyday',ann:2103,mo:175},
-  {make:'Toyota',model:'Prius',type:'Hybrid',cat:'Specialty',ann:2230,mo:186},
-  {make:'Ford',model:'Explorer',type:'SUV / Crossover',cat:'Specialty',ann:2100,mo:175},
-  {make:'Chevrolet',model:'Tahoe',type:'SUV / Full-Size',cat:'Specialty',ann:2200,mo:183},
-  {make:'Nissan',model:'Altima',type:'Sedan',cat:'Specialty',ann:2380,mo:198},
-  {make:'Ford',model:'Mustang',type:'Coupe',cat:'Specialty',ann:2496,mo:208},
-  {make:'Dodge',model:'Challenger',type:'Coupe',cat:'Specialty',ann:3695,mo:308},
-  {make:'Volvo',model:'XC40',type:'SUV / Crossover',cat:'Specialty',ann:2324,mo:194},
-  {make:'Mazda',model:'CX-90',type:'SUV / Crossover',cat:'Specialty',ann:2161,mo:180},
+  {make:'Honda',model:'CR-V',type:'SUV / Crossover',cat:'Mainstream',ann:1932,mo:161},
+  {make:'Honda',model:'HR-V',type:'SUV / Crossover',cat:'Mainstream',ann:1936,mo:161},
+  {make:'Volkswagen',model:'Tiguan',type:'SUV / Crossover',cat:'Mainstream',ann:1979,mo:165},
+  {make:'Hyundai',model:'Venue',type:'SUV / Crossover',cat:'Mainstream',ann:1999,mo:167},
+  {make:'Chevrolet',model:'TrailBlazer',type:'SUV / Crossover',cat:'Mainstream',ann:2012,mo:168},
+  {make:'Subaru',model:'Forester',type:'SUV / Crossover',cat:'Mainstream',ann:2013,mo:168},
+  {make:'Mazda',model:'CX-5',type:'SUV / Crossover',cat:'Mainstream',ann:2021,mo:168},
+  {make:'Subaru',model:'Outback',type:'SUV / Crossover',cat:'Mainstream',ann:2042,mo:170},
+  {make:'Hyundai',model:'Kona',type:'SUV / Crossover',cat:'Mainstream',ann:2048,mo:171},
+  {make:'Hyundai',model:'Tucson',type:'SUV / Crossover',cat:'Mainstream',ann:2062,mo:172},
+  {make:'Subaru',model:'Crosstrek',type:'SUV / Crossover',cat:'Mainstream',ann:2064,mo:172},
+  {make:'Toyota',model:'Corolla Cross',type:'SUV / Crossover',cat:'Mainstream',ann:2066,mo:172},
+  {make:'Kia',model:'Sportage',type:'SUV / Crossover',cat:'Mainstream',ann:2069,mo:172},
+  {make:'Honda',model:'Pilot',type:'SUV / Crossover',cat:'Mainstream',ann:2076,mo:173},
+  {make:'Honda',model:'Odyssey',type:'Minivan',cat:'Mainstream',ann:2080,mo:173},
+  {make:'Toyota',model:'RAV4',type:'SUV / Crossover',cat:'Mainstream',ann:2085,mo:174},
+  {make:'Mazda',model:'CX-30',type:'SUV / Crossover',cat:'Mainstream',ann:2086,mo:174},
+  {make:'Chevrolet',model:'Equinox',type:'SUV / Crossover',cat:'Mainstream',ann:2090,mo:174},
+  {make:'Kia',model:'Seltos',type:'SUV / Crossover',cat:'Mainstream',ann:2094,mo:174},
+  {make:'Chevrolet',model:'Trax',type:'SUV / Crossover',cat:'Mainstream',ann:2102,mo:175},
+  {make:'Jeep',model:'Wrangler',type:'SUV / Off-Road',cat:'Mainstream',ann:2104,mo:175},
+  {make:'Subaru',model:'Impreza',type:'Sedan',cat:'Mainstream',ann:2120,mo:177},
+  {make:'Ford',model:'Maverick',type:'Truck',cat:'Mainstream',ann:2118,mo:177},
+  {make:'Ford',model:'Ranger',type:'Truck',cat:'Mainstream',ann:2156,mo:180},
+  {make:'Honda',model:'Accord',type:'Sedan',cat:'Mainstream',ann:2342,mo:195},
+  {make:'Toyota',model:'Camry',type:'Sedan',cat:'Mainstream',ann:2400,mo:200},
+  {make:'Ford',model:'F-150',type:'Truck',cat:'Mainstream',ann:1862,mo:155},
+  {make:'Chevrolet',model:'Silverado 1500',type:'Truck',cat:'Mainstream',ann:1899,mo:158},
+  {make:'Toyota',model:'Tacoma',type:'Truck',cat:'Mainstream',ann:2050,mo:171},
+  {make:'Toyota',model:'Sienna',type:'Minivan',cat:'Mainstream',ann:2083,mo:174},
+  {make:'Toyota',model:'Highlander',type:'SUV / Crossover',cat:'Mainstream',ann:2103,mo:175},
+  {make:'Toyota',model:'Prius',type:'Hybrid',cat:'Mainstream',ann:2230,mo:186},
+  {make:'Ford',model:'Explorer',type:'SUV / Crossover',cat:'Mainstream',ann:2100,mo:175},
+  {make:'Chevrolet',model:'Tahoe',type:'SUV / Full-Size',cat:'Mainstream',ann:2200,mo:183},
+  {make:'Nissan',model:'Altima',type:'Sedan',cat:'Mainstream',ann:2380,mo:198},
+  {make:'Ford',model:'Mustang',type:'Coupe',cat:'Mainstream',ann:2496,mo:208},
+  {make:'Dodge',model:'Challenger',type:'Coupe',cat:'Mainstream',ann:3695,mo:308},
+  {make:'Volvo',model:'XC40',type:'SUV / Crossover',cat:'Mainstream',ann:2324,mo:194},
+  {make:'Mazda',model:'CX-90',type:'SUV / Crossover',cat:'Mainstream',ann:2161,mo:180},
   {make:'Infiniti',model:'Q50',type:'Sedan / Luxury',cat:'Luxury',ann:2736,mo:228},
   {make:'Lexus',model:'CT',type:'Hatchback / Luxury',cat:'Luxury',ann:3735,mo:311},
   {make:'Lexus',model:'RC-F',type:'Coupe / Luxury',cat:'Luxury',ann:5148,mo:429},
@@ -1020,7 +1019,7 @@ function sortModels(col){
 }
 function filterModels(){renderModels();}
 function catPill(cat){
-  const map={Everyday:'pill-green',Specialty:'pill-blue',Luxury:'pill-amber',Performance:'pill-red','Ultra-Luxury':'pill-red',EV:'pill-blue'};
+  const map={Mainstream:'pill-green',Luxury:'pill-amber',Performance:'pill-red','Ultra-Luxury':'pill-red',EV:'pill-blue'};
   return`<span class="pill ${map[cat]||'pill-gray'}">${cat}</span>`;
 }
 function renderModels(){
