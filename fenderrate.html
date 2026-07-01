@@ -198,7 +198,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:24px
   </div>
 
   <div class="grid-3" style="margin-bottom:24px">
-    <div class="stat-card"><div class="stat-label">National avg (full coverage)</div><div class="stat-value">$2,356/yr</div><div class="stat-sub">$208/mo</div></div>
+    <div class="stat-card"><div class="stat-label">National avg (full coverage)</div><div class="stat-value">$2,575/yr</div><div class="stat-sub">$215/mo</div></div>
     <div class="stat-card"><div class="stat-label">Cheapest state</div><div class="stat-value">Vermont</div><div class="stat-sub">$1,478/yr</div></div>
     <div class="stat-card"><div class="stat-label">Most expensive state</div><div class="stat-value">Louisiana</div><div class="stat-sub">$3,999/yr</div></div>
   </div>
@@ -215,7 +215,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:24px
 
       <div class="field"><label class="field-label">State</label>
         <select id="s-state" onchange="calc()">
-          <option value="2356">National average</option>
+          <option value="2575">National average</option>
           <option value="1855">Alabama</option><option value="1350">Alaska</option><option value="2230">Arizona</option><option value="1680">Arkansas</option><option value="2967">California</option><option value="2100">Colorado</option><option value="2900">Connecticut</option><option value="2530">Delaware</option><option value="3465">Washington D.C.</option><option value="3672">Florida</option><option value="2300">Georgia</option><option value="1350">Hawaii</option><option value="1390">Idaho</option><option value="1900">Illinois</option><option value="1500">Indiana</option><option value="1370">Iowa</option><option value="1760">Kansas</option><option value="2200">Kentucky</option><option value="3999">Louisiana</option><option value="1478">Maine</option><option value="3300">Maryland</option><option value="2200">Massachusetts</option><option value="2815">Michigan</option><option value="1780">Minnesota</option><option value="1850">Mississippi</option><option value="2100">Missouri</option><option value="1550">Montana</option><option value="1630">Nebraska</option><option value="3963">Nevada</option><option value="1350">New Hampshire</option><option value="3200">New Jersey</option><option value="1800">New Mexico</option><option value="3702">New York</option><option value="1380">North Carolina</option><option value="1380">North Dakota</option><option value="1400">Ohio</option><option value="2050">Oklahoma</option><option value="1950">Oregon</option><option value="2100">Pennsylvania</option><option value="2400">Rhode Island</option><option value="2100">South Carolina</option><option value="1450">South Dakota</option><option value="1680">Tennessee</option><option value="2400">Texas</option><option value="1950">Utah</option><option value="1478">Vermont</option><option value="1700">Virginia</option><option value="2000">Washington</option><option value="1600">West Virginia</option><option value="1440">Wisconsin</option><option value="1200">Wyoming</option>
         </select>
       </div>
@@ -559,7 +559,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:24px
 
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
-const BASE=2356;
+const BASE=2575;
 const CREDIT_BANNED=['California','Hawaii','Massachusetts','Michigan'];
 const GENDER_BANNED=['California','Hawaii','Massachusetts','Michigan','North Carolina','Pennsylvania'];
 const VAGE_MULTS=[1.00,0.90,0.86,0.83,0.80,0.78,0.76,0.74,0.72,0.70,0.69,0.68,0.67,0.66,0.65,0.64,0.63,0.62,0.61,0.60,0.59];
@@ -698,16 +698,16 @@ const MODEL_DATA=[
   {make:'Mazda',model:'CX-90',type:'SUV / Crossover',cat:'Mainstream',ann:2161,mo:180},
   {make:'Infiniti',model:'Q50',type:'Sedan / Luxury',cat:'Luxury',ann:2736,mo:228},
   {make:'Lexus',model:'CT',type:'Hatchback / Luxury',cat:'Luxury',ann:3735,mo:311},
-  {make:'Lexus',model:'RC-F',type:'Coupe / Luxury',cat:'Luxury',ann:8486,mo:707},
+  {make:'Lexus',model:'RC-F',type:'Coupe / Luxury',cat:'Luxury',ann:5148,mo:429},
   {make:'BMW',model:'330i',type:'Sedan / Luxury',cat:'Luxury',ann:3287,mo:274},
-  {make:'BMW',model:'M8 Gran Coupe',type:'Coupe / Luxury',cat:'Performance',ann:6744,mo:562},
+  {make:'BMW',model:'M8 Gran Coupe',type:'Coupe / Luxury',cat:'Performance',ann:5988,mo:499},
   {make:'BMW',model:'M5',type:'Sedan / Performance',cat:'Performance',ann:6593,mo:549},
   {make:'BMW',model:'M5 Touring',type:'Wagon / Performance',cat:'Performance',ann:6708,mo:559},
   {make:'BMW',model:'M8',type:'Coupe / Performance',cat:'Performance',ann:6423,mo:535},
   {make:'Mercedes-Benz',model:'GLC',type:'SUV / Luxury',cat:'Luxury',ann:4872,mo:406},
   {make:'Mercedes-Benz',model:'GLE',type:'SUV / Luxury',cat:'Luxury',ann:5040,mo:420},
-  {make:'Mercedes-Benz',model:'C63 AMG',type:'Sedan / Performance',cat:'Performance',ann:9215,mo:768},
-  {make:'Mercedes-Benz',model:'E63 AMG',type:'Sedan / Performance',cat:'Performance',ann:10508,mo:876},
+  {make:'Mercedes-Benz',model:'C63 AMG',type:'Sedan / Performance',cat:'Performance',ann:3396,mo:283},
+  {make:'Mercedes-Benz',model:'E63 AMG',type:'Sedan / Performance',cat:'Performance',ann:3696,mo:308},
   {make:'Audi',model:'RS Q8',type:'SUV / Performance',cat:'Performance',ann:4998,mo:417},
   {make:'Maserati',model:'Quattroporte',type:'Sedan',cat:'Ultra-Luxury',ann:7090,mo:591},
   {make:'Maserati',model:'Ghibli',type:'Sedan',cat:'Ultra-Luxury',ann:6384,mo:532},
